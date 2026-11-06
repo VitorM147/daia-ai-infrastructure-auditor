@@ -247,3 +247,23 @@ python -m unittest discover -s daia/proactive -p "test_*.py" -v
 ```
 
 Veja `daia/proactive/README.md` e `daia/proactive/quality_report.md`.
+
+## Human Resolution Intelligence V4
+
+A implementação 04 adiciona `daia/resolution/` para transformar achados em guias executáveis por engenheiros humanos.
+
+O gerador inclui identificação, evidências, consultas, sintomas, comportamento esperado, hipóteses, evidências contra, alternativas, confiança, passos somente leitura, opções condicionais de correção, riscos, aprovação, rollback, validação, aceite e prevenção.
+
+O validador rejeita guias incompletos, causa confirmada sem evidências contrárias/alternativas e instruções de alteração sem o marcador:
+
+```text
+EXECUÇÃO HUMANA — NÃO EXECUTAR PELO AGENTE
+```
+
+Execute os testes:
+
+```powershell
+python -m unittest discover -s daia/resolution -p "test_*.py" -v
+```
+
+O gerador não executa comandos nem abre links. Links não validados devem aparecer como caminho manual e filtros exatos.

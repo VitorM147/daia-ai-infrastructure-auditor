@@ -75,3 +75,10 @@ Redigir: senhas, tokens, chaves, PII, payloads. Incluir apenas identificadores t
 - Causalidade exige identificadores reais compartilhados; correspondência textual é somente hipótese.
 - Amostra parcial não pode sustentar afirmação global sobre Jobs, disponibilidade ou encerramento.
 - O engine não confirma causa raiz automaticamente; sempre exige evidências contrárias e alternativas.
+
+## V4 — Human Resolution Intelligence
+- Todo achado relevante deve conter identificação, evidências, diagnóstico, guia de investigação, opções condicionais de resolução, validação, aceite e prevenção.
+- Diagnóstico é somente leitura. Correções são instruções para humanos e devem conter `EXECUÇÃO HUMANA — NÃO EXECUTAR PELO AGENTE`.
+- Causa confirmada exige evidências contra e hipóteses alternativas registradas; sem isso, o guia é rejeitado ou rebaixado.
+- Links devem ser reais e provenientes de evidência; quando não houver URL validada, usar caminho manual e filtros exatos.
+- O validador local verifica completude e salvaguardas textuais, mas não substitui revisão técnica, acesso ao ambiente ou validação de links.

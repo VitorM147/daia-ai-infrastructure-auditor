@@ -60,3 +60,7 @@ Para cada correção:
 ### ENCAMINHAMENTO
 - Ticket Jira / status:
 - Duplicata verificada em (data, consulta, resultado):
+
+## Requisitos V4 — qualidade do guia humano
+
+Toda ficha gerada deve conter: identificação completa com timestamp e janela; evidências separadas por tipo e rótulo; links reais ou caminho manual com filtros; sintomas e comportamento esperado; causas, evidências a favor e contra, alternativas e confiança; passos de diagnóstico com objetivo, interface, local, consulta, esperado, interpretação e desvio; opções condicionais de correção; riscos, aprovação, rollback, condição de parada, validação e aceite. Comandos mutáveis devem conter exatamente: **EXECUÇÃO HUMANA — NÃO EXECUTAR PELO AGENTE**.

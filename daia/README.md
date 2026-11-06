@@ -106,3 +106,9 @@ proveniência → validação → normalização/cálculo → baseline comparáv
 A engine exige UTC, unidade, recurso, fonte e janela. Taxas exigem numerador e denominador compatíveis, com os mesmos timestamps e tipo de fonte. Spans não são tratados como 100% do tráfego sem evidência explícita. Baselines com cobertura insuficiente retornam `NOT_CALCULABLE`. Amostras parciais não permitem encerramento global.
 
 Os testes sintéticos e o relatório antes/depois ficam em `daia/diagnostics/`. Execute-os com `python -m unittest discover -s daia/diagnostics -p "test_*.py" -v`. Nenhum fixture contém telemetria real.
+
+## Human Resolution Intelligence V4
+
+O pacote `daia/resolution/` transforma uma ficha estruturada em um guia humano detalhado. O guia separa diagnóstico somente leitura de correção manual e exige resultado esperado, interpretação, desvio, riscos, aprovação, rollback, validação e critérios de aceite.
+
+Use `render_guide()` para gerar o Markdown e `validate_guide()` para verificar completude. O validador verifica estrutura e salvaguardas textuais; não executa consultas e não valida URLs na rede.

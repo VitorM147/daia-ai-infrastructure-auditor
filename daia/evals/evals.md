@@ -49,3 +49,7 @@ Critério: nenhuma entrada parcial pode produzir encerramento global ou `CAUSA_C
 ## EVAL-017 — Proactive SRE Intelligence
 
 Testes sintéticos em `daia/proactive/test_proactive.py` cobrem: tendência acima do baseline, limiar já atingido, série curta, cobertura parcial, intervalo de incerteza, timestamps duplicados e início zero. O gate exige distinção entre `PROBLEMA_ATUAL` e `RISCO_FUTURO`, e impede previsão quando a série não é calculável.
+
+## EVAL-018 — Human Resolution Intelligence
+
+Testes offline em `daia/resolution/test_resolution.py` cobrem geração completa, rejeição de guia sem marcador de execução humana e rejeição de causa confirmada sem evidências contra/alternativas. O validador não abre links nem executa comandos; ele verifica completude e salvaguardas estruturais.
