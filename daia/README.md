@@ -118,3 +118,9 @@ Use `render_guide()` para gerar o Markdown e `validate_guide()` para verificar c
 O pacote `daia/jira/` prepara e, quando o runtime estiver autorizado, cria issues com aprovação humana. O fingerprint usa ambiente, aplicação, serviço, recurso, classe do problema e identificador normalizado da falha; timestamps variáveis ficam fora da chave principal.
 
 O adaptador faz preflight, pesquisa duplicatas, valida projeto e exige aprovação específica. Timeout exige reconciliação; não há retry cego. Jira real, projetos, campos, permissões, automações e webhooks permanecem `NÃO VERIFICADO` até configurar um cliente externo aprovado.
+
+## Enterprise Context Intelligence V4
+
+O pacote `daia/context/` mantém um grafo de conhecimento com proveniência. A recuperação de um serviço percorre sua cadeia técnica e empresarial, lista níveis ausentes e identifica evidências contraditórias. O contexto nunca é tratado como fato quando a fonte está desconectada, desatualizada ou não verificada.
+
+Fontes reais devem ser integradas por adaptadores somente leitura e passar pelo ToolGuard. Não há acesso presumido a Datadog, Jira, Confluence, CMDB ou repositórios.

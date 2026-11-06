@@ -57,3 +57,7 @@ Testes offline em `daia/resolution/test_resolution.py` cobrem geração completa
 ## EVAL-019 — Jira Intelligence & Controlled Issue Creation
 
 Testes offline em `daia/jira/test_jira.py` cobrem proposta estruturada, duplicata, projeto não autorizado, campo obrigatório, autenticação, timeout após criação, concorrência/aprovação negada, Jira não configurado e payload sensível. O cliente fake não prova a integração corporativa real.
+
+## EVAL-020 — Enterprise Context Intelligence
+
+Testes offline em `daia/context/test_context.py` cobrem contexto completo, contexto insuficiente, isolamento entre organizações, relacionamento incorreto, evidência contraditória, fonte não conectada e proveniência fora de UTC.

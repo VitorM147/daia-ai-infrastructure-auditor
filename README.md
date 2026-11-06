@@ -279,3 +279,19 @@ O Jira real continua `NÃO VERIFICADO`: não há URL corporativa, credenciais, p
 ```powershell
 python -m unittest discover -s daia/jira -p "test_*.py" -v
 ```
+
+## Enterprise Context Intelligence V4
+
+A implementação 06 adiciona `daia/context/` para representar:
+
+```text
+EMPRESA → UNIDADE_DE_NEGÓCIO → PROCESSO → JORNADA → APLICAÇÃO → SERVIÇO → INFRAESTRUTURA → EQUIPE
+```
+
+Entidades e relacionamentos exigem proveniência, evidência, coleta UTC, última validação, confiança, responsável, ambiente e status. O contexto é isolado por organização, relacionamentos incorretos são rejeitados e contradições são reportadas.
+
+Os adaptadores são somente leitura e fontes desconectadas falham explicitamente. Quando faltam fontes, o resultado é `NÃO VERIFICADO — CONTEXTO EMPRESARIAL INSUFICIENTE`.
+
+```powershell
+python -m unittest discover -s daia/context -p "test_*.py" -v
+```

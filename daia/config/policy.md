@@ -90,3 +90,11 @@ Redigir: senhas, tokens, chaves, PII, payloads. Incluir apenas identificadores t
 - Timeout após criação exige reconciliação por fingerprint; nunca repetir cegamente.
 - Projeto, tipo, campos, componentes, responsáveis, automações e webhooks devem ser descobertos no Jira real; valores ausentes permanecem `NÃO VERIFICADO`.
 - Credenciais devem vir do runtime/secret manager e não podem ser versionadas.
+
+## V4 — Enterprise Context Intelligence
+- Modelo de contexto: Empresa → Unidade de negócio → Processo → Jornada → Aplicação → Serviço → Infraestrutura → Equipe.
+- Entidades e relacionamentos exigem fonte, evidência, coleta UTC, validação, confiança, responsável, ambiente e status.
+- Contexto é isolado por `organization_id`; relações entre organizações são inválidas.
+- Fonte desconectada não é presumida. Resultado obrigatório: `NÃO VERIFICADO — CONTEXTO EMPRESARIAL INSUFICIENTE`.
+- Contradições e dados desatualizados devem ser reportados, não resolvidos por inferência silenciosa.
+- Não executar fine-tuning automático com dados corporativos.
