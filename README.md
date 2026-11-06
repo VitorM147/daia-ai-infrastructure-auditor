@@ -196,3 +196,17 @@ O projeto é um framework de auditoria, não uma integração pronta com todos o
 ## Licença
 
 Defina a licença antes de distribuir o projeto publicamente. Nenhuma licença foi presumida neste repositório.
+
+## Segurança V4 e governança de ferramentas
+
+A Implementação 01 adiciona uma política estruturada em `daia/config/tool-allowlist.json` e um guardião offline em `daia/security/tool_guard.py`.
+
+O guardião usa **default-deny**: ferramentas ausentes, bloqueadas, com identidade divergente, efeito diferente, transporte não autorizado, limites excedidos ou verificação incompleta são negadas. Ele separa as identidades de Datadog somente leitura, Jira, criação Jira aprovada e escrita local do DAIA.
+
+Os testes simulados estão em `daia/security/test_tool_guard.py` e não acessam rede, MCP, Datadog ou Jira:
+
+```powershell
+python -m unittest discover -s daia/security -p "test_*.py" -v
+```
+
+A proteção no servidor MCP, no backend/gateway e nas credenciais ainda precisa ser configurada no ambiente de execução. O projeto não declara essa proteção como concluída apenas por ter uma política local. Veja `daia/security/risk-residual.md`.

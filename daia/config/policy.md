@@ -56,3 +56,13 @@ Redigir: senhas, tokens, chaves, PII, payloads. Incluir apenas identificadores t
 ## Avaliação
 - Casos e gates: `daia/evals/evals.md`
 - Metas por versão (definidas pelo responsável técnico): _(pendente)_
+
+## V4 — Enforcement executável
+- Fonte de decisão estruturada: `config/tool-allowlist.json`.
+- Decisão padrão: **deny**. Ferramenta ausente, identidade divergente, efeito divergente, escopo não autorizado, limite excedido ou verificação incompleta deve ser bloqueado.
+- Ponto de decisão local: `daia/security/tool_guard.py`. O guardião é offline e não despacha chamadas; o adaptador MCP/API deve chamar `authorize()` antes do despacho e interromper quando `allowed=false`.
+- Identidades separadas: `datadog-readonly`, `jira-read`, `jira-create-approved` e `daia-local-writer`.
+- Datadog: todas as mutações, execução de código e proxies genéricos permanecem bloqueados.
+- Jira: `create_jira_issue` permanece bloqueado até projeto autorizado e aprovação humana serem fornecidos no request. Nenhum projeto está autorizado atualmente.
+- Local: escritas só podem usar escopos explícitos de conhecimento/auditoria; relatórios não recebem autorização implícita.
+- Esta implementação não prova o bloqueio do servidor MCP nem das credenciais. Essa integração externa continua **NÃO VERIFICADA** até ser configurada e testada no cliente/backend.

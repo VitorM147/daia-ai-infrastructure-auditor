@@ -63,3 +63,10 @@ Esta lista é uma regra de comportamento. O servidor MCP expõe ferramentas de e
 - [ ] Inventariar automações e webhooks do projeto destino
 - [ ] Confirmar que nenhum modifica outros sistemas
 - [ ] Autorização explícita da organização registrada em `policy.md`
+
+## Fonte estruturada V4
+A decisão executável está em `config/tool-allowlist.json`, com uma entrada atômica por ferramenta e `default_decision: deny`. O Markdown é documentação humana; não é enforcement.
+
+O inventário registrado neste repositório é baseado na descoberta documental anterior do servidor Datadog (`search_*`, `get_*`, `aggregate_*`, `analyze_*`, `list_*`, `load_*`) e não representa uma descoberta MCP ao vivo nesta execução. A presença no JSON não prova que uma ferramenta esteja disponível no cliente atual. A integração deve verificar disponibilidade, identidade, escopos da credencial e efeito real antes de habilitar qualquer chamada.
+
+O validador offline fica em `daia/security/tool_guard.py`. Testes simulados ficam em `daia/security/test_tool_guard.py`. Uma decisão `allow` local só significa que o request passou pela política local; não significa que o MCP/backend esteja tecnicamente protegido.
