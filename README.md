@@ -1,0 +1,198 @@
+# DAIA — Datadog AI Infrastructure Auditor
+
+O DAIA é um framework para investigar infraestrutura, aplicações e observabilidade usando evidências do Datadog e análise assistida por IA.
+
+O projeto foi desenhado para reduzir diagnósticos baseados em suposições. A coleta, a análise, a recomendação e a execução de mudanças são etapas separadas.
+
+## O que o DAIA faz
+
+- coleta métricas, logs, traces, eventos, monitores e inventário;
+- identifica anomalias e falhas silenciosas;
+- compara sinais atuais com baselines históricos;
+- separa sintoma, correlação e causa provável;
+- classifica evidências como `OBSERVADO`, `INFERIDO`, `HIPÓTESE` ou `NÃO VERIFICADO`;
+- gera guias humanos de diagnóstico e resolução;
+- prepara propostas de atividades Jira;
+- registra limitações, erros de consulta e lacunas de cobertura;
+- gera relatórios somente quando o usuário solicita.
+
+O DAIA não deve ser entendido como um agente que corrige automaticamente a infraestrutura.
+
+## Princípios de segurança
+
+| Sistema | Regra |
+|---|---|
+| Datadog | Somente leitura |
+| Infraestrutura, Kubernetes, cloud, bancos e redes | Nenhuma escrita pelo agente |
+| Jira | Leitura e criação somente após aprovação humana explícita |
+| Base local `daia/` | Escrita controlada, com proveniência e histórico |
+| Relatórios | Gerados sob demanda e ignorados pelo Git por padrão |
+
+A allowlist local documenta a intenção. O bloqueio real deve acontecer fora do modelo, por meio de credenciais, permissões da API e configuração do MCP ou coletor.
+
+## Arquitetura
+
+```text
+Datadog / MCP / API / exportação manual
+              |
+              v
+    coletor determinístico somente leitura
+              |
+              v
+   pacote de evidências JSON/CSV sanitizado
+              |
+              v
+ IA + regras DAIA + templates + baselines
+              |
+              v
+   achados, recomendações e relatório sob demanda
+              |
+              v
+       aprovação humana para executar
+```
+
+A IA deve analisar evidências, não executar alterações diretamente. Toda hipótese precisa indicar as evidências favoráveis, as evidências contrárias, as alternativas e como uma pessoa pode confirmar ou refutar a hipótese.
+
+## Quando não existe MCP
+
+O DAIA pode operar em quatro modos:
+
+### 1. MCP do Datadog
+
+O agente consulta ferramentas de leitura disponibilizadas pelo MCP. A configuração deve permitir apenas operações autorizadas pela allowlist.
+
+### 2. Coletor por API ou SDK
+
+Um serviço autorizado consulta o Datadog usando uma service account com permissões de leitura. O coletor salva um pacote de evidências para a IA analisar.
+
+### 3. Exportação agendada
+
+Um job autorizado exporta periodicamente métricas, eventos, monitores e inventário para JSON ou CSV. Esse modo é adequado para ambientes isolados.
+
+### 4. Upload manual
+
+Uma pessoa exporta os dados e fornece o arquivo sanitizado ao agente. A janela da coleta, a origem, os filtros e as lacunas precisam acompanhar o arquivo.
+
+Se não houver rede, credencial, MCP ou ferramenta disponível, o DAIA deve marcar o dado como `NÃO VERIFICADO` ou `NÃO DISPONÍVEL`. Ele não deve contornar o bloqueio nem inventar resultados.
+
+## Fluxo de uso
+
+### Mapear o ambiente
+
+Use o comando conceitual:
+
+```text
+MAPEAR SERVIÇOS E EQUIPES
+```
+
+O objetivo é identificar serviços, ambientes, dependências, equipes indicadas por tags e lacunas de ownership.
+
+### Auditar a infraestrutura
+
+Use:
+
+```text
+AUDITAR TUDO
+```
+
+A auditoria deve seguir as fases:
+
+1. Discovery;
+2. Health Check;
+3. Deep Investigation;
+4. Correlation;
+5. Risk Assessment;
+6. Reporting.
+
+### Gerar relatório
+
+Relatórios não são criados automaticamente. Solicite explicitamente:
+
+```text
+GERAR RELATÓRIO EXECUTIVO
+GERAR RELATÓRIO TÉCNICO
+PREPARAR ATIVIDADES JIRA
+```
+
+Os arquivos aparecem em `daia/reports/`, mas essa pasta é ignorada pelo Git para evitar publicar dados operacionais.
+
+### Preparar Jira
+
+Use:
+
+```text
+PREPARAR ATIVIDADES JIRA
+```
+
+O resultado é uma proposta. O agente deve consultar duplicatas quando houver acesso ao Jira, usar fingerprints e aguardar aprovação humana antes de criar qualquer issue.
+
+## Estrutura do projeto
+
+```text
+.kiro/steering/daia-core.md   regras permanentes do agente
+
+daia/
+├── README.md                 documentação operacional detalhada
+├── config/
+│   ├── policy.md             política de autonomia e escopo
+│   └── tool-allowlist.md     ferramentas permitidas por efeito
+├── evals/
+│   ├── evals.md              casos e gates de avaliação
+│   ├── results.md            resultados registrados
+│   └── run-evals.ps1         suíte de verificações estáticas
+├── findings/                 registry local, ignorado no Git
+├── knowledge/                conhecimento operacional, ignorado no Git
+├── reports/                  relatórios sob demanda, ignorados no Git
+└── templates/
+    ├── finding.md            ficha de achado e guia humano
+    ├── jira-ticket.md        modelo de proposta Jira
+    └── report.md             modelo de relatório
+```
+
+## Evidências e privacidade
+
+Antes de enviar evidências para uma IA ou para um repositório remoto:
+
+- remova tokens, senhas e chaves;
+- remova PII desnecessária;
+- remova IDs de contas e endpoints internos quando não forem necessários;
+- sanitize corpos de logs, traces e payloads;
+- preserve a janela temporal e a origem da evidência;
+- registre o que foi removido e o que ficou indisponível.
+
+O repositório não deve conter inventário real de produção, nomes de hosts, ownership interno ou histórico de incidentes sem aprovação explícita.
+
+## Evals
+
+Execute a suíte estática no PowerShell:
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File daia/evals/run-evals.ps1
+```
+
+A suíte verifica invariantes dos arquivos, como:
+
+- ausência de e-mails, tokens e IDs sensíveis;
+- domínios de links permitidos;
+- ausência de tickets marcados como criados sem confirmação;
+- uso de ferramentas proibidas no log;
+- rotulagem de comandos mutáveis;
+- campos mínimos das fichas técnicas.
+
+Essas verificações não medem a precisão geral da IA. Evals comportamentais precisam de datasets sintéticos e revisão humana.
+
+## Estado e limitações
+
+O projeto é um framework de auditoria, não uma integração pronta com todos os ambientes. Cada instalação precisa definir:
+
+- como o Datadog será acessado;
+- quais ferramentas estão autorizadas;
+- quais ambientes estão no escopo;
+- quais dados podem sair do ambiente;
+- qual modelo de IA será usado;
+- quais projetos Jira podem receber issues;
+- quais pessoas aprovam correções e tickets.
+
+## Licença
+
+Defina a licença antes de distribuir o projeto publicamente. Nenhuma licença foi presumida neste repositório.
