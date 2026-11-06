@@ -1,0 +1,20 @@
+{
+  "schema_version": "proactive-checks-v1",
+  "default_state": "NÃO_VERIFICADO",
+  "checks": [
+    {"id":"resource_growth","signals":["cpu","memory","disk"],"requires":["unit","utc_window","baseline","coverage","resource_id"],"future_state":"RISCO_FUTURO"},
+    {"id":"storage_exhaustion","signals":["free_storage","allocated_storage"],"requires":["positive_trend","threshold","uncertainty_interval"],"future_state":"RISCO_FUTURO"},
+    {"id":"redundancy_loss","signals":["replica_count","tunnel_state","healthy_members"],"requires":["current_state","resource_identity"],"future_state":"RISCO_FUTURO"},
+    {"id":"queue_lag_growth","signals":["consumer_lag","queue_depth"],"requires":["raw_series","producer_consumer_identity","baseline"],"future_state":"RISCO_FUTURO"},
+    {"id":"latency_without_errors","signals":["p95_latency","error_rate"],"requires":["same_window","volume","baseline"],"future_state":"RISCO_FUTURO"},
+    {"id":"silent_degradation","signals":["traffic","errors","monitor_state"],"requires":["coverage_gap","baseline"],"future_state":"RISCO_FUTURO"},
+    {"id":"post_deploy_change","signals":["deploy_time","metric_change"],"requires":["change_id","temporal_window","counterfactual"],"future_state":"RISCO_FUTURO"},
+    {"id":"kubernetes_availability","signals":["desired_replicas","available_replicas","pending"],"requires":["current_state","workload_identity"],"future_state":"PROBLEMA_ATUAL"},
+    {"id":"job_recurrence","signals":["job_status","job_run_id"],"requires":["complete_pagination","current_window","job_identity"],"future_state":"RISCO_FUTURO"},
+    {"id":"certificate_maintenance_deadline","signals":["expiry","maintenance_deadline"],"requires":["source_date","timezone","owner"],"future_state":"RISCO_FUTURO"},
+    {"id":"monitoring_coverage","signals":["service_traffic","monitor_match"],"requires":["service_identity","coverage_method"],"future_state":"RISCO_FUTURO"},
+    {"id":"telemetry_ingestion","signals":["agent_reporting","log_volume","metric_points"],"requires":["source_health","expected_inventory"],"future_state":"RISCO_FUTURO"},
+    {"id":"contract_consumption","signals":["usage","contract_limit"],"requires":["authorized_contract","unit","window"],"future_state":"RISCO_FUTURO"},
+    {"id":"database_external_dependency","signals":["replica_lag","latency","errors"],"requires":["dependency_identity","volume","baseline"],"future_state":"RISCO_FUTURO"}
+  ]
+}

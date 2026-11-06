@@ -45,3 +45,7 @@ Critérios de aceitação finais: responsável técnico define antes da publica�
 A implementação V4 usa fixtures sintéticos em `daia/diagnostics/synthetic_regressions.json` e testes offline em `daia/diagnostics/test_diagnostics.py`. O gate cobre: fonte e amostragem de taxas, denominadores, UTC, cobertura de baseline, série bruta, correlação por identificadores, evidências contrárias, hipóteses alternativas e os seis padrões DAIA-001/006/007/030/038/040.
 
 Critério: nenhuma entrada parcial pode produzir encerramento global ou `CAUSA_CONFIRMADA`. Os testes não substituem a validação do coletor Datadog; a integração deve preservar a proveniência e chamar o engine antes da análise.
+
+## EVAL-017 — Proactive SRE Intelligence
+
+Testes sintéticos em `daia/proactive/test_proactive.py` cobrem: tendência acima do baseline, limiar já atingido, série curta, cobertura parcial, intervalo de incerteza, timestamps duplicados e início zero. O gate exige distinção entre `PROBLEMA_ATUAL` e `RISCO_FUTURO`, e impede previsão quando a série não é calculável.

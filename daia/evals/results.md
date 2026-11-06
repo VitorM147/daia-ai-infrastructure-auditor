@@ -35,3 +35,9 @@ Os resultados abaixo vêm da execução real de `daia/evals/run-evals.ps1` (suí
 - `python -m unittest discover -s daia/security -p "test_*.py" -v`: **11 testes, OK**.
 
 Cobertura sintética: DAIA-001, DAIA-006, DAIA-007, DAIA-030, DAIA-038 e DAIA-040. Não houve acesso ao Datadog, Jira, MCP ou rede. O resultado prova o comportamento do código local, não a integração externa nem a precisão da IA.
+
+## Execução V4 / Implementação 03 — Proactive SRE Intelligence
+
+**Testes executados:** `python -m unittest discover -s daia/proactive -p "test_*.py" -v`: **7 testes, OK**. Também foram reexecutadas as suítes existentes: Diagnostic Accuracy Engine **9 testes, OK**; Tool Governance **11 testes, OK**.
+
+Os casos usam séries temporais sintéticas e não acessam Datadog, Jira, MCP ou infraestrutura. O motor não faz remediação automática. A sazonalidade deve ser fornecida por um baseline comparável; o motor não inventa padrão sazonal quando ele não foi calculado.

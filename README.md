@@ -235,3 +235,15 @@ python -m unittest discover -s daia/security -p "test_*.py" -v
 ```
 
 O relatório metodológico antes/depois está em `daia/diagnostics/quality_report.md`. O engine não acessa Datadog nem substitui o bloqueio externo do MCP/backend.
+
+## Proactive SRE Intelligence V4
+
+A implementação 03 adiciona `daia/proactive/` para procurar riscos antes de incidentes. O catálogo cobre crescimento de recursos, armazenamento, redundância, filas, latência, degradação silenciosa, pós-deploy, Kubernetes, Jobs, certificados, cobertura de monitores, ingestão, consumo contratual, bancos e dependências externas.
+
+O motor separa `PROBLEMA_ATUAL`, `RISCO_FUTURO`, `SEM_EVIDENCIA` e `NÃO_VERIFICADO`. Não fornece prazo de esgotamento sem tendência suficiente e intervalo de incerteza. Não executa remediações nem acessa Datadog, Jira ou infraestrutura.
+
+```powershell
+python -m unittest discover -s daia/proactive -p "test_*.py" -v
+```
+
+Veja `daia/proactive/README.md` e `daia/proactive/quality_report.md`.
