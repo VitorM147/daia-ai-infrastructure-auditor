@@ -1,0 +1,13 @@
+# Relatórios do DAIA são gerados sob demanda e não são versionados
+daia/reports/*
+!daia/reports/.gitkeep
+
+# Saída gerada pelo script de evals
+daia/evals/last-run.md
+
+# Dados operacionais internos: não publicar no repositório
+# Inclui inventário, ownership, hosts, fingerprints e histórico de auditorias
+daia/knowledge/*
+!daia/knowledge/.gitkeep
+daia/audit-log.md
+daia/findings/registry.md
