@@ -210,3 +210,28 @@ python -m unittest discover -s daia/security -p "test_*.py" -v
 ```
 
 A proteção no servidor MCP, no backend/gateway e nas credenciais ainda precisa ser configurada no ambiente de execução. O projeto não declara essa proteção como concluída apenas por ter uma política local. Veja `daia/security/risk-residual.md`.
+
+## Diagnostic Accuracy Engine V4
+
+A implementação 02 adiciona `daia/diagnostics/`, um engine determinístico e somente local para reduzir conclusões sem evidência.
+
+Ele valida:
+
+- unidades, denominadores, timestamps UTC e fonte de uma métrica;
+- mistura indevida de spans amostrados com métricas de tráfego;
+- baseline comparável por janela, cobertura e mediana;
+- séries brutas antes de aceitar tendências;
+- correlação por identificadores reais;
+- evidências contrárias e hipóteses alternativas;
+- amostras parciais, que resultam em `INCOMPLETA` e nunca em encerramento global.
+
+Os seis cenários sintéticos de regressão estão em `daia/diagnostics/synthetic_regressions.json`. Eles representam os padrões DAIA-001, DAIA-006, DAIA-007, DAIA-030, DAIA-038 e DAIA-040 sem telemetria corporativa real.
+
+Execute os testes:
+
+```powershell
+python -m unittest discover -s daia/diagnostics -p "test_*.py" -v
+python -m unittest discover -s daia/security -p "test_*.py" -v
+```
+
+O relatório metodológico antes/depois está em `daia/diagnostics/quality_report.md`. O engine não acessa Datadog nem substitui o bloqueio externo do MCP/backend.

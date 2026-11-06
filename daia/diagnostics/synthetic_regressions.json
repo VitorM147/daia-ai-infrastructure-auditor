@@ -1,0 +1,12 @@
+{
+  "schema_version": "diagnostic-regression-v1",
+  "classification": "synthetic-derived-from-prior-failure-patterns",
+  "cases": [
+    {"id":"DAIA-001","facts":{"error_rate_source":"span","outbound_correlation_id":false},"expected":"INCOMPLETA"},
+    {"id":"DAIA-006","facts":{"aggregation":"weighted","raw_series":true},"expected":"INCOMPLETA"},
+    {"id":"DAIA-007","facts":{"max_replicas":1},"expected":"CONFIGURAÇÃO"},
+    {"id":"DAIA-030","facts":{"oom_origin":"identity-api"},"expected":"INCOMPLETA"},
+    {"id":"DAIA-038","facts":{"baseline_available":false},"expected":"INCOMPLETA"},
+    {"id":"DAIA-040","facts":{"read_points":80,"total_points":4158},"expected":"INCOMPLETA"}
+  ]
+}

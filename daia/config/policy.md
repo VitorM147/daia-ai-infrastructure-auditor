@@ -66,3 +66,12 @@ Redigir: senhas, tokens, chaves, PII, payloads. Incluir apenas identificadores t
 - Jira: `create_jira_issue` permanece bloqueado até projeto autorizado e aprovação humana serem fornecidos no request. Nenhum projeto está autorizado atualmente.
 - Local: escritas só podem usar escopos explícitos de conhecimento/auditoria; relatórios não recebem autorização implícita.
 - Esta implementação não prova o bloqueio do servidor MCP nem das credenciais. Essa integração externa continua **NÃO VERIFICADA** até ser configurada e testada no cliente/backend.
+
+## V4 — Diagnostic Accuracy Engine
+- Cálculos de taxa exigem fonte, unidade, recurso, janela UTC e denominador compatível.
+- Spans amostrados não representam 100% do tráfego sem evidência de cobertura e semântica da métrica.
+- Baseline não calculável por cobertura insuficiente não pode sustentar regressão ou encerramento.
+- Tendência exige série bruta; agregações como `.weighted()` não podem ser tratadas como tendência sem validação.
+- Causalidade exige identificadores reais compartilhados; correspondência textual é somente hipótese.
+- Amostra parcial não pode sustentar afirmação global sobre Jobs, disponibilidade ou encerramento.
+- O engine não confirma causa raiz automaticamente; sempre exige evidências contrárias e alternativas.

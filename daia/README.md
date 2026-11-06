@@ -92,3 +92,17 @@ Quando não houver MCP, a IA pode rodar sobre o pacote exportado localmente ou e
 5. `MAPEAR SERVIÇOS E EQUIPES`, depois `AUDITAR TUDO`.
 6. Pedir explicitamente `GERAR RELATÓRIO EXECUTIVO/TÉCNICO` quando quiser um arquivo.
 7. Montar datasets e executar `EXECUTAR EVALS` antes de ampliar a autonomia.
+
+## Diagnostic Accuracy Engine V4
+
+O pacote `daia/diagnostics/` é a camada determinística entre a coleta e a análise por IA. Ele não acessa Datadog, Jira, rede ou infraestrutura.
+
+Pipeline:
+
+```text
+proveniência → validação → normalização/cálculo → baseline comparável → regressão → diagnóstico conservador
+```
+
+A engine exige UTC, unidade, recurso, fonte e janela. Taxas exigem numerador e denominador compatíveis, com os mesmos timestamps e tipo de fonte. Spans não são tratados como 100% do tráfego sem evidência explícita. Baselines com cobertura insuficiente retornam `NOT_CALCULABLE`. Amostras parciais não permitem encerramento global.
+
+Os testes sintéticos e o relatório antes/depois ficam em `daia/diagnostics/`. Execute-os com `python -m unittest discover -s daia/diagnostics -p "test_*.py" -v`. Nenhum fixture contém telemetria real.

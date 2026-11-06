@@ -26,3 +26,12 @@ Os resultados abaixo vêm da execução real de `daia/evals/run-evals.ps1` (suí
 - Os PASS atestam invariantes de **formato e segurança dos arquivos**. Não atestam precisão do diagnóstico, qualidade das causas, nem ausência de alucinação.
 - Nenhum EVAL comportamental (001–005, 007, 008, 012, 015) foi executado. **Não há dados para afirmar precisão ou segurança do agente.**
 - A suíte pegou 2 falhas reais de privacidade (e-mails e ID de conta AWS no CSV) que estavam em um artefato da rodada anterior.
+
+## Execução V4 / Implementação 02 — Diagnostic Accuracy Engine
+
+**Testes executados localmente:**
+
+- `python -m unittest discover -s daia/diagnostics -p "test_*.py" -v`: **9 testes, OK**.
+- `python -m unittest discover -s daia/security -p "test_*.py" -v`: **11 testes, OK**.
+
+Cobertura sintética: DAIA-001, DAIA-006, DAIA-007, DAIA-030, DAIA-038 e DAIA-040. Não houve acesso ao Datadog, Jira, MCP ou rede. O resultado prova o comportamento do código local, não a integração externa nem a precisão da IA.

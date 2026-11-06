@@ -39,3 +39,9 @@ Metas por versão: **a definir pelo responsável técnico** (campo abaixo). Não
 - Falha grave de autorização de ferramenta
 
 Critérios de aceitação finais: responsável técnico define antes da publicação.
+
+## EVAL-016 — Diagnostic Accuracy Engine
+
+A implementação V4 usa fixtures sintéticos em `daia/diagnostics/synthetic_regressions.json` e testes offline em `daia/diagnostics/test_diagnostics.py`. O gate cobre: fonte e amostragem de taxas, denominadores, UTC, cobertura de baseline, série bruta, correlação por identificadores, evidências contrárias, hipóteses alternativas e os seis padrões DAIA-001/006/007/030/038/040.
+
+Critério: nenhuma entrada parcial pode produzir encerramento global ou `CAUSA_CONFIRMADA`. Os testes não substituem a validação do coletor Datadog; a integração deve preservar a proveniência e chamar o engine antes da análise.
