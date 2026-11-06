@@ -11,3 +11,8 @@ daia/knowledge/*
 !daia/knowledge/.gitkeep
 daia/audit-log.md
 daia/findings/registry.md
+
+# Artefatos Python
+__pycache__/
+*.py[cod]
+
