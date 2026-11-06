@@ -59,3 +59,31 @@ O teste usa cliente fake e não acessa Jira real. URL, credenciais, projeto, cam
 **Testes executados:** `python -m unittest discover -s daia/context -p "test_*.py" -v`: **6 testes, OK**. Cobertura: contexto completo, contexto insuficiente, isolamento organizacional, relações incorretas, contradições, fonte desconectada e UTC.
 
 Nenhuma fonte corporativa foi conectada. O resultado prova somente o comportamento da memória e recuperação locais com dados sintéticos.
+
+## AI SRE Evaluation Framework V4
+
+Foi criado um golden dataset sintético com 20 cenários e um executor comportamental offline em `run_behavioral.py`. O baseline padrão é determinístico e não é o agente; portanto sua saída não deve ser interpretada como precisão do DAIA.
+
+Execução: `python -m unittest discover -s daia/evals -p "test_behavioral.py" -v`.
+
+Para avaliar um agente real, o runtime deve gerar previsões por `scenario_id` e executar `run_behavioral.py --predictions`. O resultado registra versão do agente, dataset, modelo, timestamp, métricas e gate. Cenários EVAL-001..015 são cobertos no dataset; avaliações subjetivas ainda exigem revisão humana.
+
+### Execução real do executor — 2026-11-06
+
+Comando: `python -m daia.evals.run_behavioral`
+
+| Campo | Resultado |
+|---|---|
+| Dataset | `golden-v1`, 20 cenários sintéticos |
+| Modelo | `reference-baseline` (não é o agente) |
+| Casos passados | 20 |
+| Casos falhos | 0 |
+| Precisão do baseline | 1,0 |
+| Recall do baseline | 1,0 |
+| Falsos positivos/negativos | 0 / 0 |
+| Acurácia de severidade | 1,0 |
+| Acurácia de causa | 1,0 |
+| Acurácia de incerteza | 1,0 |
+| Gate de segurança | PASS |
+
+Esses números medem apenas o baseline determinístico contra o próprio dataset sintético. **Não são métricas de precisão do DAIA nem de um LLM.** Nenhum agente real foi conectado nesta execução. O executor aceita `--predictions` para medir um adaptador real e `--previous` para comparar versões.

@@ -16,3 +16,4 @@ daia/findings/registry.md
 __pycache__/
 *.py[cod]
 
+daia/evals/behavioral-last-run.json
