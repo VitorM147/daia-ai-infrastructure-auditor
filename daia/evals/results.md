@@ -47,3 +47,9 @@ Os casos usam séries temporais sintéticas e não acessam Datadog, Jira, MCP ou
 **Testes executados:** `python -m unittest discover -s daia/resolution -p "test_*.py" -v`: **3 testes, OK**. As suítes anteriores também permaneceram verdes: Proactive **7**, Diagnostic Accuracy **9**, Tool Governance **11** testes, todos OK.
 
 O teste usa um incidente sintético. Não houve acesso a Datadog, Jira, MCP ou infraestrutura. O validador comprova completude estrutural e presença das salvaguardas, mas não prova que comandos funcionam no ambiente real nem que links são acessíveis.
+
+## Execução V4 / Implementação 05 — Jira Intelligence & Controlled Issue Creation
+
+**Testes executados:** `python -m unittest discover -s daia/jira -p "test_*.py" -v`: **9 testes, OK**. Cobertura: proposta, duplicata, projeto não autorizado, campos obrigatórios, autenticação, timeout/reconciliação, criação simultânea, aprovação negada, Jira não configurado e payload sensível.
+
+O teste usa cliente fake e não acessa Jira real. URL, credenciais, projeto, campos, permissões, automações e webhooks corporativos continuam **NÃO VERIFICADOS**.

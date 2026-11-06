@@ -267,3 +267,15 @@ python -m unittest discover -s daia/resolution -p "test_*.py" -v
 ```
 
 O gerador não executa comandos nem abre links. Links não validados devem aparecer como caminho manual e filtros exatos.
+
+## Jira Intelligence & Controlled Issue Creation V4
+
+A implementação 05 adiciona `daia/jira/` com proposta estruturada, fingerprints estáveis, deduplicação, aprovação humana, controle de concorrência e reconciliação após timeout.
+
+O padrão é Nível 2. Nível 1 apenas propõe. Nível 2 cria somente com aprovação específica e projeto autorizado. Nível 3 permanece bloqueado até autorização corporativa separada.
+
+O Jira real continua `NÃO VERIFICADO`: não há URL corporativa, credenciais, projeto autorizado ou chamada de rede versionados. O cliente padrão falha explicitamente quando não configurado.
+
+```powershell
+python -m unittest discover -s daia/jira -p "test_*.py" -v
+```

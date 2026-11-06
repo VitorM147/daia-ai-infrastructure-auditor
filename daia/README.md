@@ -112,3 +112,9 @@ Os testes sintéticos e o relatório antes/depois ficam em `daia/diagnostics/`. 
 O pacote `daia/resolution/` transforma uma ficha estruturada em um guia humano detalhado. O guia separa diagnóstico somente leitura de correção manual e exige resultado esperado, interpretação, desvio, riscos, aprovação, rollback, validação e critérios de aceite.
 
 Use `render_guide()` para gerar o Markdown e `validate_guide()` para verificar completude. O validador verifica estrutura e salvaguardas textuais; não executa consultas e não valida URLs na rede.
+
+## Jira Intelligence V4
+
+O pacote `daia/jira/` prepara e, quando o runtime estiver autorizado, cria issues com aprovação humana. O fingerprint usa ambiente, aplicação, serviço, recurso, classe do problema e identificador normalizado da falha; timestamps variáveis ficam fora da chave principal.
+
+O adaptador faz preflight, pesquisa duplicatas, valida projeto e exige aprovação específica. Timeout exige reconciliação; não há retry cego. Jira real, projetos, campos, permissões, automações e webhooks permanecem `NÃO VERIFICADO` até configurar um cliente externo aprovado.

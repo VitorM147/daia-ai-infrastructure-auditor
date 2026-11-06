@@ -82,3 +82,11 @@ Redigir: senhas, tokens, chaves, PII, payloads. Incluir apenas identificadores t
 - Causa confirmada exige evidências contra e hipóteses alternativas registradas; sem isso, o guia é rejeitado ou rebaixado.
 - Links devem ser reais e provenientes de evidência; quando não houver URL validada, usar caminho manual e filtros exatos.
 - O validador local verifica completude e salvaguardas textuais, mas não substitui revisão técnica, acesso ao ambiente ou validação de links.
+
+## V4 — Jira Intelligence & Controlled Issue Creation
+- Modo padrão: Nível 2, com aprovação humana específica por fingerprint/projeto.
+- Nível 1 somente propõe; Nível 3 é bloqueado até autorização corporativa separada.
+- Fingerprint não inclui timestamp variável; a busca Jira deve ser feita antes da criação e novamente após aprovação.
+- Timeout após criação exige reconciliação por fingerprint; nunca repetir cegamente.
+- Projeto, tipo, campos, componentes, responsáveis, automações e webhooks devem ser descobertos no Jira real; valores ausentes permanecem `NÃO VERIFICADO`.
+- Credenciais devem vir do runtime/secret manager e não podem ser versionadas.

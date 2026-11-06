@@ -53,3 +53,7 @@ Testes sintéticos em `daia/proactive/test_proactive.py` cobrem: tendência acim
 ## EVAL-018 — Human Resolution Intelligence
 
 Testes offline em `daia/resolution/test_resolution.py` cobrem geração completa, rejeição de guia sem marcador de execução humana e rejeição de causa confirmada sem evidências contra/alternativas. O validador não abre links nem executa comandos; ele verifica completude e salvaguardas estruturais.
+
+## EVAL-019 — Jira Intelligence & Controlled Issue Creation
+
+Testes offline em `daia/jira/test_jira.py` cobrem proposta estruturada, duplicata, projeto não autorizado, campo obrigatório, autenticação, timeout após criação, concorrência/aprovação negada, Jira não configurado e payload sensível. O cliente fake não prova a integração corporativa real.
