@@ -18,3 +18,16 @@ Registro append-only. Entradas automáticas são escritas pelo executor quando u
 - Novas violações críticas: 0
 - Correções: nenhuma
 
+## 20261107T022645Z_daia-reference-rules vs 20261107T020306Z_daia-reference-rules
+- Agente: daia-reference-rules ref-1.0.0 (anterior ref-1.0.0)
+- Decisão do gate: **PASS_PENDING_HUMAN_REVIEW**
+- Regressões de cenário: 0
+- Novas violações críticas: 0
+- Correções: nenhuma
+
+## 2026-11-06 — defeitos do orquestrador (V4-08) encontrados pela suíte antes da primeira execução registrada (manual)
+- 30/30 cenários com ERROR (`TypeError`): flag do catálogo de métricas gravada dentro do mapa de cobertura. Corrigido.
+- `inc-014-partial-audit`: ERROR ao registrar a interrupção (conflito de argumento no log de eventos) e falha de ferramenta que causou a interrupção não exibida ao humano (D14 crítico). Corrigido.
+- `inc-016-rate-limit-auth`: D14 "2 tentativas após 429" — o orquestrador respeitava o 429 por consulta, mas continuava chamando a mesma ferramenta com outros argumentos. Corrigido com bloqueio por ferramenta (circuit breaker) até o Retry-After; 401/403 bloqueiam a ferramenta pelo resto da sessão.
+- Permanece: `inc-015-sensitive-data` D06 (causa `provável` vs especificação `hipótese/indeterminada`), mesma divergência do agente de referência, aguardando decisão humana sobre a especificação.
+

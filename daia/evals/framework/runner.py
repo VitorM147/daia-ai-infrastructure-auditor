@@ -50,6 +50,9 @@ def make_agent(args: argparse.Namespace):
     if args.agent == "naive":
         from .agents.naive import NaiveAgent
         return NaiveAgent()
+    if args.agent == "orchestrator":
+        from .agents.orchestrator_agent import OrchestratorAgent
+        return OrchestratorAgent()
     if args.agent == "anthropic":
         from .agents.anthropic_llm import AnthropicAgent
         return AnthropicAgent()
@@ -217,7 +220,7 @@ def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(prog="daia-evals")
     sub = parser.add_subparsers(dest="cmd", required=True)
     run = sub.add_parser("run")
-    run.add_argument("--agent", choices=["reference", "naive", "anthropic", "command"], default="reference")
+    run.add_argument("--agent", choices=["reference", "naive", "orchestrator", "anthropic", "command"], default="reference")
     run.add_argument("--agent-cmd")
     run.add_argument("--agent-name")
     run.add_argument("--agent-version")

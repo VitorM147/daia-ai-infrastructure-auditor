@@ -85,3 +85,9 @@ Os casos da tabela acima agora são executados sobre o agente em `daia/evals/fra
 | EVAL-015 | inc-016 | D14, D15 |
 
 Gate: `gates.json`. As dimensões críticas (D08, D09, D10, D11, D12, D14, D15) bloqueiam com qualquer violação, conforme "Gates de publicação" acima. Metas numéricas continuam pendentes do responsável técnico.
+
+## EVAL-021 — Autonomous Audit Orchestration (Implementação 08)
+
+Testes offline em `daia/orchestration/test_orchestration.py` cobrem: fluxo completo de 15 etapas; auditoria que não para no primeiro achado; volume alto (milhares de logs/eventos) sem conclusão por amostra; ampliação de limites só com aprovação; retomada após limite de consultas, após queda de conexão e após expiração de TTL, sem repetir consultas já respondidas; fonte persistentemente parcial mantida INCOMPLETA; circuit breaker para 401/403/429; recorrência por fingerprint entre auditorias; modo agendado sem criação Jira; criação aprovada sob demanda com reconciliação após timeout; guias validados por `daia.resolution`.
+
+O orquestrador também é executado pela suíte comportamental como agente `orchestrator` (`runner run --agent orchestrator`). Critério: nenhuma conclusão sem verificação — status CONCLUÍDA só com todas as etapas, domínios e consultas planejadas completas.

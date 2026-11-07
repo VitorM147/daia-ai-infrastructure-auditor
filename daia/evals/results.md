@@ -116,3 +116,26 @@ Repetição do agente de referência com `--repeat 2`: estabilidade 100% (determ
 - Todos os cenários são sintéticos; incidentes históricos sanitizados e validados por humanos ainda precisam ser incluídos.
 - Metas numéricas (`gates.json`) seguem pendentes do responsável técnico.
 - `run-behavioral.ps1` não foi executado em Windows neste ambiente (sem PowerShell disponível); o executor Python foi.
+
+## Execução V4 / Implementação 08 — Autonomous Audit Orchestration
+
+**Testes:** `python -m unittest discover -s daia/orchestration -p "test_*.py" -t .`: **23 testes, OK**. Suítes anteriores reexecutadas: Evals 32, Diagnostics 9, Tool Governance 11, Proactive 7, Resolution 3, Jira 9, Context 6 — todas OK.
+
+Cobertura dos testes de orquestração (todos offline, sandbox):
+- fluxo de 15 etapas com checkpoint; auditoria que encontra os dois serviços afetados em uma cascata (não para no primeiro achado);
+- 60 serviços, ~4,5 mil logs e 2,5 mil eventos: com o padrão de 15 páginas × 200 itens, logs ficam PARCIAL e a auditoria INCOMPLETA; após ampliação **aprovada**, a retomada lê apenas as páginas restantes (as 15 já lidas vêm do cache) e conclui;
+- interrupção por limite de consultas, por queda de conexão (exceção no meio da etapa) e retomada com dados expirados (TTL): nenhuma consulta bem-sucedida é repetida, etapas concluídas não são reexecutadas, dados vencidos são revalidados;
+- fonte com página permanentemente indisponível continua INCOMPLETA após 6 retomadas;
+- limites sem valor implícito; ampliação de limite, janela ou domínio sem aprovação é recusada; tokens/custo de LLM recusados com o padrão 0/0;
+- 429 com Retry-After acima do máximo e 401: uma única chamada à ferramenta;
+- recorrência por fingerprint entre duas auditorias; modo agendado não cria issue mesmo com aprovação informada.
+
+**Suíte comportamental (Implementação 07) com o orquestrador como agente** — `history/runs/20261107T022645Z_daia-orchestrator` (commit da implementação 08, golden-v2.0.0):
+
+| Agente | Executados | Precisão | Recall | FP / FN | Violações críticas | Gate |
+|---|---|---|---|---|---|---|
+| `daia-orchestrator` orchestrator-1.0.0 | 30/30 | 100% (22/22; IC95% 85–100%) | 100% (19/19; IC95% 83–100%) | 0 / 0 | 0 | PASS_PENDING_HUMAN_REVIEW |
+
+A mesma ressalva da Implementação 07 vale aqui: as regras de detecção do orquestrador derivam das do agente de referência, escrito junto com o dataset. Os números mostram que a orquestração não perdeu achados nem violou gates críticos nesses cenários; **não** são taxa de precisão do DAIA em produção. A suíte encontrou 4 defeitos reais no orquestrador durante o desenvolvimento (ver `history/regressions.md`).
+
+**Não verificado nesta implementação:** integração ao vivo com MCP/API do Datadog (adaptador depende das credenciais da organização), agendador real (cron/Agendador de Tarefas), `run-audit.ps1` em Windows, comportamento com volumes reais de produção e limites corporativos (os limites do arquivo são padrões conservadores do projeto, `validated_by` nulo).
