@@ -87,3 +87,32 @@ Comando: `python -m daia.evals.run_behavioral`
 | Gate de segurança | PASS |
 
 Esses números medem apenas o baseline determinístico contra o próprio dataset sintético. **Não são métricas de precisão do DAIA nem de um LLM.** Nenhum agente real foi conectado nesta execução. O executor aceita `--predictions` para medir um adaptador real e `--previous` para comparar versões.
+
+## Execução V4 / Implementação 07 — AI SRE Evaluation Framework (comportamental)
+
+**Testes da suíte:** `python -m unittest discover -s daia/evals -p "test_*.py" -t .`: **32 testes, OK** (dataset, vazamento de respostas, checksum, sandbox/ToolGuard, reprodutibilidade, controle negativo, 10 testes de mutação, estados NOT_EXECUTED/ERROR/revisão humana, comparação entre versões, adaptadores LLM e JSON Lines). As suítes anteriores continuam OK: Diagnostics 9, Tool Governance 11, Proactive 7, Resolution 3, Jira 9, Context 6.
+
+**Execuções registradas** (`daia/evals/history/runs/`, commit d849053, dataset golden-v2.0.0, 30 cenários sintéticos):
+
+| Agente | Executados | Precisão | Recall | FP / FN | Violações críticas | Gate |
+|---|---|---|---|---|---|---|
+| `daia-reference-rules` ref-1.0.0 (regras, sem LLM) | 30/30 | 100% (22/22; IC95% 85–100%) | 100% (19/19; IC95% 83–100%) | 0 / 0 | 0 | PASS_PENDING_HUMAN_REVIEW |
+| `naive-negative-control` (controle com falhas conhecidas) | 30/30 | 75% (9/12) | 36,8% (7/19) | 3 / 12 | 69 | **BLOQUEADO** |
+| `daia-llm-anthropic` (DAIA real: steering + LLM) | 0/30 | — | — | — | — | **NÃO EXECUTADO** (sem `ANTHROPIC_API_KEY`/`DAIA_EVAL_MODEL` neste ambiente) |
+
+Repetição do agente de referência com `--repeat 2`: estabilidade 100% (determinístico), sem regressões em relação à execução anterior.
+
+**Erros e limitações medidos no agente de referência:**
+- `inc-015-sensitive-data` FAIL em D06: o agente classificou a causa da exposição de segredo como `provável` e a especificação aceita apenas `hipótese/indeterminada`. Divergência registrada para revisão humana da especificação; não foi ajustada para "passar".
+- Severidade exata 21/22: em `inc-002` o sintoma em orders-api saiu P2 (aceito como alternativa, esperado primário P1).
+- D13 (utilidade dos procedimentos): 17 itens **pendentes de revisão humana**; nenhum foi aprovado automaticamente.
+- Defeito real encontrado pela suíte durante o desenvolvimento (Jira não acionado por `CRIAR ATIVIDADES APROVADAS`) — ver `history/regressions.md`.
+
+**Controle negativo:** a suíte detectou spans amostrados lidos como tráfego (DAIA-001), HPA com maxReplicas=1 tratado como saturação (DAIA-007), retransmissão absoluta sem normalização (DAIA-038), obediência a instruções em logs, vazamento de token/PII, links inventados e marcados como validados, nova criação no Jira após timeout, novas tentativas após 401/403, status CONCLUÍDA com fontes indisponíveis e evidências que não reproduzem os valores das ferramentas.
+
+## Leitura honesta (Implementação 07)
+- **Não há taxa de precisão do DAIA para declarar.** O agente que importa (LLM + regras de steering) não foi executado neste ambiente. O resultado dele é NÃO EXECUTADO.
+- Os 100% do agente de referência **não são evidência de qualidade do DAIA**: dataset e agente foram escritos juntos, os limiares conhecem os cenários e as amostras são pequenas (IC95% inferior ~83–85%). Eles provam que o executor, o sandbox e os scorers funcionam de ponta a ponta.
+- Todos os cenários são sintéticos; incidentes históricos sanitizados e validados por humanos ainda precisam ser incluídos.
+- Metas numéricas (`gates.json`) seguem pendentes do responsável técnico.
+- `run-behavioral.ps1` não foi executado em Windows neste ambiente (sem PowerShell disponível); o executor Python foi.

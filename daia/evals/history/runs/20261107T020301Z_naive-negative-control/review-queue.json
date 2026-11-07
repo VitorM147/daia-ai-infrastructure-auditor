@@ -1,0 +1,5 @@
+{
+ "run_id": "20261107T020301Z_naive-negative-control",
+ "instructions": "Preencha verdict (PASS/FAIL), reviewer, notes e reviewed_at (UTC). Aplique com: python -m daia.evals.framework.runner review-apply <run_dir> <arquivo>.",
+ "items": []
+}
