@@ -138,8 +138,13 @@ daia/
 │   └── tool-allowlist.md     ferramentas permitidas por efeito
 ├── evals/
 │   ├── evals.md              casos e gates de avaliação
+│   ├── BEHAVIORAL.md         suíte comportamental (Golden Dataset + executor)
 │   ├── results.md            resultados registrados
-│   └── run-evals.ps1         suíte de verificações estáticas
+│   ├── run-evals.ps1         suíte de verificações estáticas
+│   ├── run-behavioral.ps1    suíte comportamental (executa o agente)
+│   ├── golden/               Golden Dataset sintético (golden-v2)
+│   ├── framework/            sandbox, scorers, métricas, gates, agentes
+│   └── history/              execuções registradas e histórico de regressões
 ├── findings/                 registry local, ignorado no Git
 ├── knowledge/                conhecimento operacional, ignorado no Git
 ├── reports/                  relatórios sob demanda, ignorados no Git

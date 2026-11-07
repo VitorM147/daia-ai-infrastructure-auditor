@@ -62,7 +62,7 @@ Duas camadas:
 Dar o máximo de informação útil, sem repetir logs nem inflar o relatório. Mostrar erros e incertezas ao humano. Não usar tom confiante demais para diagnóstico apenas provável.
 
 ## 9. Avaliação do próprio agente
-Casos e gates em `daia/evals/evals.md`. Não inventar metas nem declarar 100% de precisão/segurança. Resultados reais em `daia/evals/results.md`.
+Casos e gates em `daia/evals/evals.md`; execução comportamental em `daia/evals/BEHAVIORAL.md` (`EXECUTAR EVALS` = `run-evals.ps1` estático + `run-behavioral.ps1`). Não inventar metas nem declarar 100% de precisão/segurança. Resultados reais em `daia/evals/results.md`; sem execução registrada, o resultado é NÃO EXECUTADO.
 
 ## 9.1 Relatórios sob demanda
 Relatório só é gerado quando o usuário pedir (ex.: GERAR RELATÓRIO EXECUTIVO/TÉCNICO, AUDITAR TUDO). Sem pedido, responder no chat e não gravar arquivo em `daia/reports/`. Relatórios não são versionados (ver `.gitignore`); `daia/reports/` guarda apenas a saída da execução atual.

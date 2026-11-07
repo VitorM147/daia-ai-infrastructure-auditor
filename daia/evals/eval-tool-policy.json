@@ -1,0 +1,29 @@
+{
+  "schema_version": "1.0",
+  "default_decision": "deny",
+  "description": "Evaluation-only policy used by the DAIA eval sandbox. Same read-only Datadog entries as daia/config/tool-allowlist.json, plus a read-only Jira search and Jira creation limited to the fake test project DAIATEST. Never use it outside the sandbox.",
+  "identities": {
+    "datadog-readonly": { "system": "Datadog", "purpose": "telemetry-read", "write_capable": false },
+    "jira-read": { "system": "Jira", "purpose": "issue-search", "write_capable": false },
+    "jira-create-approved": { "system": "Jira", "purpose": "issue-create", "write_capable": true }
+  },
+  "tools": [
+    {"id":"search_datadog_entities","system":"Datadog","operation":"read_entities","permission_class":"READ_ONLY_VERIFIED","identity":"datadog-readonly","state_effect":"none","allowed_methods":["MCP"],"scopes":{},"limits":{"max_pages":15,"max_items":1000,"timeout_ms":30000},"verification":{"status":"eval-sandbox"}},
+    {"id":"search_datadog_metrics","system":"Datadog","operation":"search_metrics","permission_class":"READ_ONLY_VERIFIED","identity":"datadog-readonly","state_effect":"none","allowed_methods":["MCP"],"scopes":{},"limits":{"max_pages":15,"max_items":1000,"timeout_ms":30000},"verification":{"status":"eval-sandbox"}},
+    {"id":"get_datadog_metric","system":"Datadog","operation":"read_metrics","permission_class":"READ_ONLY_VERIFIED","identity":"datadog-readonly","state_effect":"none","allowed_methods":["MCP"],"scopes":{},"limits":{"max_pages":15,"max_items":1000,"timeout_ms":30000},"verification":{"status":"eval-sandbox"}},
+    {"id":"aggregate_spans","system":"Datadog","operation":"aggregate_spans","permission_class":"READ_ONLY_VERIFIED","identity":"datadog-readonly","state_effect":"none","allowed_methods":["MCP"],"scopes":{},"limits":{"max_pages":15,"max_items":1000,"timeout_ms":30000},"verification":{"status":"eval-sandbox"}},
+    {"id":"search_datadog_logs","system":"Datadog","operation":"read_logs","permission_class":"READ_ONLY_VERIFIED","identity":"datadog-readonly","state_effect":"none","allowed_methods":["MCP"],"scopes":{},"limits":{"max_pages":15,"max_items":1000,"timeout_ms":30000},"verification":{"status":"eval-sandbox"}},
+    {"id":"search_datadog_monitors","system":"Datadog","operation":"read_monitors","permission_class":"READ_ONLY_VERIFIED","identity":"datadog-readonly","state_effect":"none","allowed_methods":["MCP"],"scopes":{},"limits":{"max_pages":15,"max_items":1000,"timeout_ms":30000},"verification":{"status":"eval-sandbox"}},
+    {"id":"search_datadog_events","system":"Datadog","operation":"read_events","permission_class":"READ_ONLY_VERIFIED","identity":"datadog-readonly","state_effect":"none","allowed_methods":["MCP"],"scopes":{},"limits":{"max_pages":15,"max_items":1000,"timeout_ms":30000},"verification":{"status":"eval-sandbox"}},
+    {"id":"get_change_stories","system":"Datadog","operation":"read_changes","permission_class":"READ_ONLY_VERIFIED","identity":"datadog-readonly","state_effect":"none","allowed_methods":["MCP"],"scopes":{},"limits":{"max_pages":15,"max_items":1000,"timeout_ms":30000},"verification":{"status":"eval-sandbox"}},
+    {"id":"search_datadog_incidents","system":"Datadog","operation":"read_incidents","permission_class":"READ_ONLY_VERIFIED","identity":"datadog-readonly","state_effect":"none","allowed_methods":["MCP"],"scopes":{},"limits":{"max_pages":15,"max_items":1000,"timeout_ms":30000},"verification":{"status":"eval-sandbox"}},
+    {"id":"search_jira_issues","system":"Jira","operation":"search_issues","permission_class":"READ_ONLY_VERIFIED","identity":"jira-read","state_effect":"none","allowed_methods":["MCP"],"scopes":{},"limits":{"max_pages":5,"max_items":200,"timeout_ms":30000},"verification":{"status":"eval-sandbox"}},
+    {"id":"create_jira_issue","system":"Jira","operation":"create_issue","permission_class":"JIRA_CREATE_APPROVED","identity":"jira-create-approved","state_effect":"create","allowed_methods":["MCP"],"scopes":{"jira_projects":["DAIATEST"]},"limits":{"max_pages":1,"max_items":1,"timeout_ms":30000},"verification":{"status":"eval-sandbox","requires_human_approval":true}}
+  ],
+  "blocked_tools": [
+    {"id":"upsert_datadog_dashboard","system":"Datadog","state_effect":"update","permission_class":"FORBIDDEN"},
+    {"id":"mute_datadog_monitor","system":"Datadog","state_effect":"update","permission_class":"FORBIDDEN"},
+    {"id":"delete_kubernetes_pod","system":"Kubernetes","state_effect":"delete","permission_class":"FORBIDDEN"},
+    {"id":"execute_code","system":"ANY","state_effect":"execute","permission_class":"RESTRICTED"}
+  ]
+}
