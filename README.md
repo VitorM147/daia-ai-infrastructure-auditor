@@ -95,7 +95,7 @@ Use:
 AUDITAR TUDO
 ```
 
-A auditoria deve seguir as fases:
+A auditoria orquestrada (`python -m daia.orchestration.cli start ...`, ver `daia/orchestration/README.md`) executa 15 etapas com checkpoint e retomada. Em resumo, as fases são:
 
 1. Discovery;
 2. Health Check;
@@ -145,6 +145,7 @@ daia/
 │   ├── golden/               Golden Dataset sintético (golden-v2)
 │   ├── framework/            sandbox, scorers, métricas, gates, agentes
 │   └── history/              execuções registradas e histórico de regressões
+├── orchestration/            orquestrador de auditorias (15 etapas, checkpoints, retomada, limites)
 ├── findings/                 registry local, ignorado no Git
 ├── knowledge/                conhecimento operacional, ignorado no Git
 ├── reports/                  relatórios sob demanda, ignorados no Git

@@ -14,6 +14,7 @@ from __future__ import annotations
 import copy
 import hashlib
 import json
+import threading
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any, Callable, Mapping
@@ -40,7 +41,7 @@ TOOL_CATALOG: dict[str, dict[str, Any]] = {
     },
     "search_datadog_metrics": {
         "description": "Lista nomes de métricas existentes que contêm o texto informado.",
-        "input_schema": {"type": "object", "properties": {"query": {"type": "string"}}},
+        "input_schema": {"type": "object", "properties": {"query": {"type": "string"}, "page_size": {"type": "integer"}, "cursor": {"type": "string"}}},
         "system": "Datadog", "state_effect": "none",
     },
     "get_datadog_metric": {
@@ -55,7 +56,7 @@ TOOL_CATALOG: dict[str, dict[str, Any]] = {
     },
     "search_datadog_logs": {
         "description": "Busca logs (texto livre no message, filtros service/status).",
-        "input_schema": {"type": "object", "properties": {"query": {"type": "string"}, "service": {"type": "string"}, "status": {"type": "string"}, "limit": {"type": "integer"}}},
+        "input_schema": {"type": "object", "properties": {"query": {"type": "string"}, "service": {"type": "string"}, "status": {"type": "string"}, "limit": {"type": "integer"}, "page_size": {"type": "integer"}, "cursor": {"type": "string"}}},
         "system": "Datadog", "state_effect": "none",
     },
     "search_datadog_monitors": {
@@ -156,6 +157,7 @@ class Sandbox:
         self.jira_created: list[dict[str, Any]] = []
         self.jira_create_attempts: list[str] = []  # call ids
         self._jira_seq = 100
+        self._lock = threading.RLock()
         self.context = TaskContext(
             task_id=hashlib.sha256(scenario["scenario_id"].encode()).hexdigest()[:10],
             input_text=scenario["input"]["text"],
@@ -166,6 +168,10 @@ class Sandbox:
 
     # ----------------------------------------------------------------- dispatch
     def call(self, tool: str, args: Mapping[str, Any] | None = None) -> dict[str, Any]:
+        with self._lock:
+            return self._call(tool, args)
+
+    def _call(self, tool: str, args: Mapping[str, Any] | None = None) -> dict[str, Any]:
         args = dict(args or {})
         call_id = f"c{len(self.calls) + 1:04d}"
         spec = TOOL_CATALOG.get(tool)
@@ -280,6 +286,21 @@ class Sandbox:
             "create_jira_issue": self._jira_create,
         }
 
+    @staticmethod
+    def _paginate(items: list, args: Mapping[str, Any], key: str, extra: dict | None = None) -> dict[str, Any]:
+        """Cursor pagination, only when the caller asks for it with page_size."""
+        out = dict(extra or {})
+        if "page_size" not in args:
+            out[key] = items
+            return out
+        size = max(1, int(args["page_size"]))
+        start = int(args.get("cursor") or 0)
+        end = start + size
+        out[key] = items[start:end]
+        out["pagination"] = {"cursor": str(start), "next_cursor": str(end) if end < len(items) else None,
+                             "page_size": size, "total": len(items)}
+        return out
+
     def _entities(self, args, _call_id):
         inventory = self.telemetry.get("inventory", {})
         kind = args.get("kind")
@@ -294,7 +315,7 @@ class Sandbox:
     def _metric_names(self, args, _call_id):
         query = str(args.get("query", "")).lower()
         catalog = self.telemetry.get("metric_catalog") or sorted({m["metric"] for m in self.telemetry.get("metrics", [])})
-        return {"metrics": [m for m in catalog if query in m.lower()]}
+        return self._paginate([m for m in catalog if query in m.lower()], args, "metrics")
 
     def _metric(self, args, _call_id):
         name = args.get("metric")
@@ -303,7 +324,7 @@ class Sandbox:
         terms = [t.strip() for t in str(args.get("scope", "")).split(",") if t.strip()]
         series = [copy.deepcopy(s) for s in self.telemetry.get("metrics", [])
                   if s["metric"] == name and all(t in s["scope"].split(",") for t in terms)]
-        return {"series": series}
+        return self._paginate(series, args, "series")
 
     def _spans(self, args, _call_id):
         service = args.get("service")
@@ -316,25 +337,27 @@ class Sandbox:
         logs = [copy.deepcopy(e) for e in self.telemetry.get("logs", [])
                 if (not service or e["service"] == service) and (not status or e["status"] == status)
                 and (not query or query in e["message"].lower())]
+        if "page_size" in args:
+            return self._paginate(logs, args, "logs", {"total": len(logs)})
         return {"logs": logs[:limit], "total": len(logs), "truncated": len(logs) > limit}
 
     def _monitors(self, args, _call_id):
         service = args.get("service")
-        return {"monitors": [copy.deepcopy(m) for m in self.telemetry.get("monitors", [])
-                             if not service or f"service:{service}" in m.get("tags", [])]}
+        return self._paginate([copy.deepcopy(m) for m in self.telemetry.get("monitors", [])
+                               if not service or f"service:{service}" in m.get("tags", [])], args, "monitors")
 
     def _events(self, args, _call_id):
         query = str(args.get("query", "")).lower()
-        return {"events": [copy.deepcopy(e) for e in self.telemetry.get("events", [])
-                           if not query or query in (e["title"] + " " + e.get("text", "")).lower()]}
+        return self._paginate([copy.deepcopy(e) for e in self.telemetry.get("events", [])
+                               if not query or query in (e["title"] + " " + e.get("text", "")).lower()], args, "events")
 
     def _changes(self, args, _call_id):
         service = args.get("service")
-        return {"changes": [copy.deepcopy(c) for c in self.telemetry.get("changes", []) if not service or c["service"] == service]}
+        return self._paginate([copy.deepcopy(c) for c in self.telemetry.get("changes", []) if not service or c["service"] == service], args, "changes")
 
     def _incidents(self, args, _call_id):
         service = args.get("service")
-        return {"incidents": [copy.deepcopy(i) for i in self.telemetry.get("incidents", []) if not service or service in i.get("services", [])]}
+        return self._paginate([copy.deepcopy(i) for i in self.telemetry.get("incidents", []) if not service or service in i.get("services", [])], args, "incidents")
 
     def _jira_search(self, args, _call_id):
         text = str(args.get("text", "")).lower()

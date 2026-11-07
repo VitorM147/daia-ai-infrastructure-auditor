@@ -19,3 +19,7 @@ __pycache__/
 daia/evals/behavioral-last-run.json
 # Saídas locais avulsas do executor comportamental (use --record para histórico versionado)
 daia/evals/*.result.json
+
+# Checkpoints e cache de auditorias orquestradas (dados operacionais)
+daia/audits/
+daia/findings/registry.json

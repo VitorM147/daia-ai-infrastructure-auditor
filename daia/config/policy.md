@@ -16,7 +16,7 @@
 ## Escopo
 - Ambientes permitidos: _(preencher, ex.: prod, hml)_
 - Ambientes excluídos: _(preencher)_
-- Limite de consultas de alto volume por auditoria: _(preencher)_
+- Limite de consultas de alto volume por auditoria: _(preencher; enquanto isso vale o padrão conservador de `config/orchestration-limits.json`, ampliação só com aprovação registrada)_
 
 ## Jira
 - Integração conectada: **Não**
@@ -98,3 +98,9 @@ Redigir: senhas, tokens, chaves, PII, payloads. Incluir apenas identificadores t
 - Fonte desconectada não é presumida. Resultado obrigatório: `NÃO VERIFICADO — CONTEXTO EMPRESARIAL INSUFICIENTE`.
 - Contradições e dados desatualizados devem ser reportados, não resolvidos por inferência silenciosa.
 - Não executar fine-tuning automático com dados corporativos.
+
+
+## V4 — Orquestração de auditorias
+- Limites de execução: `config/orchestration-limits.json` (padrões do projeto, `validated_by` pendente). Sem valor implícito; ampliar exige aprovação humana registrada no checkpoint.
+- Agendamento externo: permitido apenas por mecanismo autorizado pela organização, com a mesma credencial somente leitura. Execuções agendadas não criam issues Jira.
+- Checkpoints em `daia/audits/` e registro de recorrência em `daia/findings/registry.json` (não versionados).

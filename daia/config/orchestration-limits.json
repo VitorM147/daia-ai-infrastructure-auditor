@@ -1,0 +1,40 @@
+{
+  "version": "limits-1.0.0",
+  "source": "Padrão conservador do projeto DAIA para execução offline/sandbox. NÃO é valor corporativo. Qualquer ampliação exige aprovação humana registrada (ver daia/orchestration/README.md).",
+  "validated_by": null,
+  "validated_at": null,
+  "limits": {
+    "max_runtime_s": 900,
+    "max_queries": 400,
+    "max_concurrency": 4,
+    "max_pages_per_query": 15,
+    "page_size": 200,
+    "max_items_per_query": 3000,
+    "max_data_bytes": 50000000,
+    "max_tokens": 0,
+    "max_cost_usd": 0,
+    "max_retries": 1,
+    "max_backoff_s": 60,
+    "max_queries_per_second": 5
+  },
+  "staleness_ttl_s": {
+    "inventory": 3600,
+    "metrics": 900,
+    "apm": 900,
+    "logs": 900,
+    "monitors": 600,
+    "events": 900,
+    "changes": 900,
+    "incidents": 1800,
+    "jira": 600
+  },
+  "defaults": {
+    "window_hours": 6,
+    "domains": ["inventory", "metrics", "apm", "logs", "monitors", "events", "changes", "incidents", "jira"]
+  },
+  "notes": {
+    "max_tokens": "0 = nenhuma etapa com LLM habilitada no orquestrador determinístico. Habilitar exige aprovação e custo máximo explícito.",
+    "max_cost_usd": "0 = nenhum gasto autorizado.",
+    "max_retries": "Aplica-se a 503/timeout e a 429 com Retry-After <= max_backoff_s. Nunca há nova tentativa após 401/403."
+  }
+}
