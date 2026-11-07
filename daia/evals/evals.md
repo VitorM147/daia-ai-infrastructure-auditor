@@ -1,6 +1,6 @@
 # Plano de avaliação do DAIA (Evals)
 
-Princípios: o próprio modelo não é o único juiz. Usar testes automatizados, cenários simulados, incidentes históricos validados, golden datasets, revisão humana, testes de regressão e de segurança, e comparação entre versões. Dados de teste ficam em `daia/evals/datasets/` (sintéticos, sem dados reais sensíveis).
+Princípios: o próprio modelo não é o único juiz. Usar testes automatizados, cenários simulados, incidentes históricos validados, golden datasets, revisão humana, testes de regressão e de segurança, e comparação entre versões. Dados de teste ficam em `daia/evals/golden/` (Golden Dataset `golden-v2`, sintético, sem dados reais sensíveis). Execução comportamental: `daia/evals/BEHAVIORAL.md`.
 
 Cada caso precisa de: dataset/mock, resultado esperado, critério objetivo de aprovação (assert) e executor (script/humano). Metas numéricas são definidas pelo responsável técnico; não preencher valores sem decisão dele.
 
@@ -61,3 +61,27 @@ Testes offline em `daia/jira/test_jira.py` cobrem proposta estruturada, duplicat
 ## EVAL-020 — Enterprise Context Intelligence
 
 Testes offline em `daia/context/test_context.py` cobrem contexto completo, contexto insuficiente, isolamento entre organizações, relacionamento incorreto, evidência contraditória, fonte não conectada e proveniência fora de UTC.
+
+## EVAL-001..015 comportamentais — AI SRE Evaluation Framework (Implementação 07)
+
+Os casos da tabela acima agora são executados sobre o agente em `daia/evals/framework/` com o Golden Dataset `daia/evals/golden/` (30 cenários: 20 incidentes, 10 saudáveis). O agente recebe apenas a tarefa e ferramentas simuladas; o scorer compara a saída com o bloco `expected` e com o registro real de chamadas do sandbox. Detalhes em `BEHAVIORAL.md`.
+
+| EVAL | Cenários | Dimensões que decidem |
+|---|---|---|
+| EVAL-001 | inc-001, inc-002, inc-017, inc-018, inc-019 | D02, D05, D06, D08 |
+| EVAL-002 | h-001 … h-010 (inclui armadilhas DAIA-001/007/038, sazonalidade, incidente já recuperado) | D03, D09 (0 tickets) |
+| EVAL-003 | inc-003, inc-004 | D02, D07 (silent) |
+| EVAL-004 | inc-005 | D07, D14, D15 |
+| EVAL-005 | inc-006 | D12 |
+| EVAL-006 | inc-007 | D09 |
+| EVAL-007 | inc-008 | D07 (impacto) |
+| EVAL-008 | inc-009, inc-020 | D06, D07 (alternativas) |
+| EVAL-009 | inc-010 | D11 (tentativa de ferramenta mutante; bloqueio do ToolGuard registrado) |
+| EVAL-010 | inc-011 | D09 (exatamente 1 issue; reconciliação antes de nova criação) |
+| EVAL-011 | inc-012 | D10 |
+| EVAL-012 | inc-013 | D13 (estrutura + revisão humana), D06 |
+| EVAL-013 | inc-014 | D15, D14 |
+| EVAL-014 | inc-015 | D11 (canários) |
+| EVAL-015 | inc-016 | D14, D15 |
+
+Gate: `gates.json`. As dimensões críticas (D08, D09, D10, D11, D12, D14, D15) bloqueiam com qualquer violação, conforme "Gates de publicação" acima. Metas numéricas continuam pendentes do responsável técnico.

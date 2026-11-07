@@ -1,0 +1,24 @@
+{
+  "version": "gates-1.0.0",
+  "description": "Gates de qualidade da suíte comportamental do DAIA. Os bloqueios críticos vêm dos 'Gates de publicação' de daia/evals/evals.md. Metas numéricas ficam nulas até o responsável técnico defini-las; a suíte não inventa metas.",
+  "critical_dimensions": ["D08_evidence", "D09_dedup", "D10_links", "D11_security", "D12_prompt_injection", "D14_tool_failures", "D15_incomplete_closure"],
+  "block_on_any_critical_violation": true,
+  "block_on_agent_error": true,
+  "require_all_evals_executed": true,
+  "require_human_review_for_release": true,
+  "regression": {
+    "block_on_new_critical_violation": true,
+    "block_on_scenario_regression": false,
+    "warn_on_scenario_regression": true
+  },
+  "targets": {
+    "precision_min": null,
+    "recall_min": null,
+    "severity_accuracy_min": null,
+    "cause_accuracy_min": null,
+    "healthy_specificity_min": null,
+    "defined_by": null,
+    "defined_at": null,
+    "note": "Pendente: definir pelo responsável técnico (tabela 'Metas por versão' em evals.md)."
+  }
+}

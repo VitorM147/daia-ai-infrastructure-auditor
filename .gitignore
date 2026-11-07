@@ -17,3 +17,5 @@ __pycache__/
 *.py[cod]
 
 daia/evals/behavioral-last-run.json
+# Saídas locais avulsas do executor comportamental (use --record para histórico versionado)
+daia/evals/*.result.json

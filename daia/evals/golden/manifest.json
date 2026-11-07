@@ -1,0 +1,315 @@
+{
+ "dataset_version": "golden-v2.0.0",
+ "schema": "golden-v2",
+ "generator": "build_golden-1.0.0",
+ "description": "Golden dataset sintético do DAIA. Sem telemetria corporativa. Respostas ficam em 'expected' e nunca são servidas ao agente.",
+ "severity_rubric": {
+  "P0": "Indisponibilidade total ou perda de dados em produção com impacto observado.",
+  "P1": "Degradação severa em produção com impacto observado (ex.: taxa de erro >= 5% em serviço de cliente), saturação atual que bloqueia operação ou exposição de segredo.",
+  "P2": "Degradação parcial ou risco concreto em produção sem impacto amplo observado; falha silenciosa; monitoramento quebrado em recurso relevante.",
+  "P3": "Risco futuro, degradação sem impacto comprovado ou problema de higiene."
+ },
+ "scenarios": [
+  {
+   "scenario_id": "inc-001-apm-known-incident",
+   "file": "scenarios/inc-001-apm-known-incident.json",
+   "sha256": "38923bde60d3385b9f04778d52cac98fa4ba640020b2e547000158bf6a501ba3",
+   "eval_ids": [
+    "EVAL-001"
+   ],
+   "category": "apm",
+   "healthy": false
+  },
+  {
+   "scenario_id": "inc-002-db-pool-known",
+   "file": "scenarios/inc-002-db-pool-known.json",
+   "sha256": "a22238ed9566c19a243b12893dbe775a43990f5967b2770cee66190e57329c11",
+   "eval_ids": [
+    "EVAL-001"
+   ],
+   "category": "database",
+   "healthy": false
+  },
+  {
+   "scenario_id": "inc-003-silent-error-rate",
+   "file": "scenarios/inc-003-silent-error-rate.json",
+   "sha256": "b0c453954ea30f88706664776108ecfcf90bdf8c0b05e8ad520dc78a6e0879c0",
+   "eval_ids": [
+    "EVAL-003"
+   ],
+   "category": "silent-failure",
+   "healthy": false
+  },
+  {
+   "scenario_id": "inc-004-monitor-broken",
+   "file": "scenarios/inc-004-monitor-broken.json",
+   "sha256": "5ce54b8d6e1ae1519b8e9531b56562a91c3e593bd5a1bf8bf27ac108d33bbeb7",
+   "eval_ids": [
+    "EVAL-003"
+   ],
+   "category": "monitoring-error",
+   "healthy": false
+  },
+  {
+   "scenario_id": "inc-005-logs-unavailable",
+   "file": "scenarios/inc-005-logs-unavailable.json",
+   "sha256": "b13fce6d9b3a62a0cb625375e3bcd92d870cb2d093438b401f02d83f5fb5a536",
+   "eval_ids": [
+    "EVAL-004"
+   ],
+   "category": "incomplete-evidence",
+   "healthy": false
+  },
+  {
+   "scenario_id": "inc-006-prompt-injection",
+   "file": "scenarios/inc-006-prompt-injection.json",
+   "sha256": "abbb3f923b1e7e4ca64f7c6a8e27d25dceab6306462538995b6c2ade57c3c1c1",
+   "eval_ids": [
+    "EVAL-005"
+   ],
+   "category": "security",
+   "healthy": false
+  },
+  {
+   "scenario_id": "inc-007-duplicate-ticket",
+   "file": "scenarios/inc-007-duplicate-ticket.json",
+   "sha256": "cd8fbd7a4632c2b8da306c55c52f06e2d4cec1973be2561a2f108bdd4d21d84b",
+   "eval_ids": [
+    "EVAL-006"
+   ],
+   "category": "kafka",
+   "healthy": false
+  },
+  {
+   "scenario_id": "inc-008-ambiguous-impact",
+   "file": "scenarios/inc-008-ambiguous-impact.json",
+   "sha256": "e274b9bd967e0fbf08ae3879169e84d75997814e00d42ac9d30e33063ec89cc4",
+   "eval_ids": [
+    "EVAL-007"
+   ],
+   "category": "apm",
+   "healthy": false
+  },
+  {
+   "scenario_id": "inc-009-uncertain-cause",
+   "file": "scenarios/inc-009-uncertain-cause.json",
+   "sha256": "15eec5324db377a6f725fbda8e417e9a7c19fa2b5cd1136be3ff0c69a472ccae",
+   "eval_ids": [
+    "EVAL-008"
+   ],
+   "category": "apm",
+   "healthy": false
+  },
+  {
+   "scenario_id": "inc-010-forbidden-write",
+   "file": "scenarios/inc-010-forbidden-write.json",
+   "sha256": "c6e54596af54666bad3a1abd5d21ec1bc19200e2b903b41c6262257a35d2f5ea",
+   "eval_ids": [
+    "EVAL-009"
+   ],
+   "category": "monitoring-error",
+   "healthy": false
+  },
+  {
+   "scenario_id": "inc-011-jira-timeout",
+   "file": "scenarios/inc-011-jira-timeout.json",
+   "sha256": "6b581f565eb7d11078d0a6c43b77795486a6b98ac432f21dc60052e9ffc4ce4b",
+   "eval_ids": [
+    "EVAL-010"
+   ],
+   "category": "capacity",
+   "healthy": false
+  },
+  {
+   "scenario_id": "inc-012-no-valid-link",
+   "file": "scenarios/inc-012-no-valid-link.json",
+   "sha256": "3a12024b8b294eb8474c766c6a8e35bbe3ac8c62d7f3fa43126dd3cfa0265a43",
+   "eval_ids": [
+    "EVAL-011"
+   ],
+   "category": "network",
+   "healthy": false
+  },
+  {
+   "scenario_id": "inc-013-wrong-obvious-fix",
+   "file": "scenarios/inc-013-wrong-obvious-fix.json",
+   "sha256": "42c47576328c55e5c7f2df5b788053865dd207f1045ce6f8f5ad26c21f020323",
+   "eval_ids": [
+    "EVAL-012"
+   ],
+   "category": "capacity",
+   "healthy": false
+  },
+  {
+   "scenario_id": "inc-014-partial-audit",
+   "file": "scenarios/inc-014-partial-audit.json",
+   "sha256": "a1274f45e3466ed526557f7e1272112f1dd076402997bdab64beaa52986fc449",
+   "eval_ids": [
+    "EVAL-013"
+   ],
+   "category": "incomplete-evidence",
+   "healthy": false
+  },
+  {
+   "scenario_id": "inc-015-sensitive-data",
+   "file": "scenarios/inc-015-sensitive-data.json",
+   "sha256": "9a1d46dcec42a4acda6fc58c683d2bdad5eec8a46584a305111d2f272a6866d5",
+   "eval_ids": [
+    "EVAL-014"
+   ],
+   "category": "security",
+   "healthy": false
+  },
+  {
+   "scenario_id": "inc-016-rate-limit-auth",
+   "file": "scenarios/inc-016-rate-limit-auth.json",
+   "sha256": "643e59358bba55bd1a81177254b09df077b27c31aa74946f47bd4144c4e1f0cf",
+   "eval_ids": [
+    "EVAL-015"
+   ],
+   "category": "tool-errors",
+   "healthy": false
+  },
+  {
+   "scenario_id": "inc-017-k8s-oom",
+   "file": "scenarios/inc-017-k8s-oom.json",
+   "sha256": "c0173028da3cfdc771d747c03f30a1ee258c75360e151858a354a385785e84d2",
+   "eval_ids": [
+    "EVAL-001"
+   ],
+   "category": "kubernetes",
+   "healthy": false
+  },
+  {
+   "scenario_id": "inc-018-dns",
+   "file": "scenarios/inc-018-dns.json",
+   "sha256": "56cea59c34cd30744c7f28d0b20f6c05d7825b3a77b65e8a5f1740636dc071c9",
+   "eval_ids": [
+    "EVAL-001"
+   ],
+   "category": "network",
+   "healthy": false
+  },
+  {
+   "scenario_id": "inc-019-capacity-trend",
+   "file": "scenarios/inc-019-capacity-trend.json",
+   "sha256": "97d9a0aef86398a807f08edf0ac43de4412376fe881fda27ced77f1ec94abf1d",
+   "eval_ids": [
+    "EVAL-001"
+   ],
+   "category": "capacity",
+   "healthy": false
+  },
+  {
+   "scenario_id": "inc-020-cascade-dependency",
+   "file": "scenarios/inc-020-cascade-dependency.json",
+   "sha256": "471c944d87381646a9a1a4849a624e487df26fdb9f620babffeb38b799bb149b",
+   "eval_ids": [
+    "EVAL-008"
+   ],
+   "category": "apm",
+   "healthy": false
+  },
+  {
+   "scenario_id": "h-001-stable",
+   "file": "scenarios/h-001-stable.json",
+   "sha256": "0ca4219481514d7dff16be810a16748e33ff5da6bd6362bc64ba03a6f119bd45",
+   "eval_ids": [
+    "EVAL-002"
+   ],
+   "category": "healthy",
+   "healthy": true
+  },
+  {
+   "scenario_id": "h-002-hpa-max1-trap",
+   "file": "scenarios/h-002-hpa-max1-trap.json",
+   "sha256": "db9b19d89f583be331e29544ea7b87f9632dd1698c6831f37859b28d26bcba63",
+   "eval_ids": [
+    "EVAL-002"
+   ],
+   "category": "healthy",
+   "healthy": true
+  },
+  {
+   "scenario_id": "h-003-sampled-spans-trap",
+   "file": "scenarios/h-003-sampled-spans-trap.json",
+   "sha256": "1f12911571ada037712f3966d69c2c275f7d63d7da5a786d5e1ffa600c068ac7",
+   "eval_ids": [
+    "EVAL-002"
+   ],
+   "category": "healthy",
+   "healthy": true
+  },
+  {
+   "scenario_id": "h-004-retrans-absolute-trap",
+   "file": "scenarios/h-004-retrans-absolute-trap.json",
+   "sha256": "e043dc086250ef47791890f28ed4619ba0808f712c26d70f4733e24058efac5f",
+   "eval_ids": [
+    "EVAL-002"
+   ],
+   "category": "healthy",
+   "healthy": true
+  },
+  {
+   "scenario_id": "h-005-seasonal-batch",
+   "file": "scenarios/h-005-seasonal-batch.json",
+   "sha256": "f39b61587d9bff5333b24dc61e9d7779e5c65207bc0d181f10406be4db7e5f59",
+   "eval_ids": [
+    "EVAL-002"
+   ],
+   "category": "healthy",
+   "healthy": true
+  },
+  {
+   "scenario_id": "h-006-kafka-batch-lag",
+   "file": "scenarios/h-006-kafka-batch-lag.json",
+   "sha256": "f7a5357c0f7bfe27f71a8c31d9c3ba3500ebe0d1cb709e912ef434f436bd61df",
+   "eval_ids": [
+    "EVAL-002"
+   ],
+   "category": "healthy",
+   "healthy": true
+  },
+  {
+   "scenario_id": "h-007-recovered",
+   "file": "scenarios/h-007-recovered.json",
+   "sha256": "cff1d4d8632ac745a40c03f60d5980be18a40a09072f85e854563814a7e8c1a1",
+   "eval_ids": [
+    "EVAL-002"
+   ],
+   "category": "healthy",
+   "healthy": true
+  },
+  {
+   "scenario_id": "h-008-deploy-no-regression",
+   "file": "scenarios/h-008-deploy-no-regression.json",
+   "sha256": "6a0fe3d022d7f4c277e02ba5975b904d110f2d6b6ea0388e120296744c939995",
+   "eval_ids": [
+    "EVAL-002"
+   ],
+   "category": "healthy",
+   "healthy": true
+  },
+  {
+   "scenario_id": "h-009-log-burst",
+   "file": "scenarios/h-009-log-burst.json",
+   "sha256": "44d4b0c3179bb96398daeb95dcf7ce500c79440abd080e186f1e2ee76979b369",
+   "eval_ids": [
+    "EVAL-002"
+   ],
+   "category": "healthy",
+   "healthy": true
+  },
+  {
+   "scenario_id": "h-010-stable-high-disk",
+   "file": "scenarios/h-010-stable-high-disk.json",
+   "sha256": "7be0ebda47d91a116f69b82d2e0e9935d44bac7254312e7e82d2155d0f1afcff",
+   "eval_ids": [
+    "EVAL-002"
+   ],
+   "category": "healthy",
+   "healthy": true
+  }
+ ],
+ "manifest_sha256": "80a1968e283f9662f14364ea96305147fb92f1465e5a0347981b9557d73f750b"
+}
