@@ -11,6 +11,7 @@ import json
 import os
 import tempfile
 import threading
+import time
 from pathlib import Path
 from typing import Any, Iterable, Mapping
 
@@ -37,7 +38,19 @@ def _atomic_write(path: Path, text: str) -> None:
             fh.write(text)
             fh.flush()
             os.fsync(fh.fileno())
-        os.replace(tmp, path)
+        replaced = False
+        last_error = None
+        for attempt in range(6):
+            try:
+                os.replace(tmp, path)
+                replaced = True
+                break
+            except PermissionError as exc:
+                last_error = exc
+                if attempt < 5:
+                    time.sleep(0.02 * (attempt + 1))
+        if not replaced:
+            raise last_error  # type: ignore[misc]
     except BaseException:
         if os.path.exists(tmp):
             os.unlink(tmp)
