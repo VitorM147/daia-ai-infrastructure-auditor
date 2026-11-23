@@ -42,8 +42,10 @@ class CommandAgent:
         argv = shlex.split(self.command, posix=os.name != "nt")
         if not argv or shutil.which(argv[0]) is None:
             raise AgentNotAvailable(f"command not found: {argv[0] if argv else '<empty>'}")
+        # The parent decodes UTF-8; force the child to emit it (Python on Windows defaults to the ANSI code page).
+        env = {**os.environ, "PYTHONIOENCODING": "utf-8", "PYTHONUTF8": "1"}
         proc = subprocess.Popen(argv, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
-                                text=True, encoding="utf-8", bufsize=1)
+                                text=True, encoding="utf-8", bufsize=1, env=env)
         timer = threading.Timer(self.timeout_s, proc.kill)
         timer.start()
         try:

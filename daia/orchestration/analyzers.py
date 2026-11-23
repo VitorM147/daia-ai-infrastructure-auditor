@@ -315,7 +315,8 @@ class Analyzer:
             self.add("secret_exposed_in_logs", svc, svc, "P1", "OBSERVADO", "potencial",
                      f"{len(msgs)} log(s) de {svc} com credencial/PII em texto claro (valores redigidos).",
                      evidence=[{"call_id": call, "value": prefix, "note": "trecho não sensível"}], links=self._links_for(svc),
-                     cause=_simple("provável", "log de cabeçalhos/payload sem mascaramento", ["biblioteca de logging de terceiros"]))
+                     # The log proves the exposure, not why it happens; no causal identifier exists, so this is a hypothesis.
+                     cause=_simple("hipótese", "log de cabeçalhos/payload sem mascaramento", ["biblioteca de logging de terceiros"]))
         for svc, n in dns.items():
             if n >= DETECTION["dns_log_min"]:
                 self.add("dns_resolution_failure", svc, svc, "P2", "OBSERVADO", "observado",

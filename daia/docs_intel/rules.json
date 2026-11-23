@@ -1,0 +1,644 @@
+{
+ "catalog_version": "1",
+ "rules": [
+  {
+   "rule_id": "DAIA-DOC-LOG-001",
+   "domain": "logs",
+   "title": "Segmentar logs em varios indices",
+   "summary": "A documentacao recomenda varios indices para separar logs por retencao, cota diaria, monitoramento de uso e faturamento.",
+   "source": {
+    "type": "official_datadog",
+    "url": "https://docs.datadoghq.com/logs/guide/best-practices-for-log-management/",
+    "section": "Set up multiple indexes for log segmentation",
+    "verified_at": "2026-11-10",
+    "page_sha256": "35451f670870ed1104192a68c065c64c2efc2ecc87a252873328c1f78c9fd213"
+   },
+   "applicability": "REQUIRES_CONFIGURATION_VALIDATION",
+   "conditions": [
+    "existem indices compativeis",
+    "existe politica de retencao definida"
+   ],
+   "risks": [
+    "mudar segmentacao pode alterar disponibilidade de logs para investigacao"
+   ],
+   "permitted_action": "revisar a segmentacao atual e sugerir reorganizacao",
+   "prohibited_action": "criar, alterar ou remover indices",
+   "documented_cost": "unknown",
+   "cost_status": "CUSTO_DESCONHECIDO",
+   "cost_note": "Custo contratual nao validado; a documentacao publica nao substitui o contrato.",
+   "inspection": "READ_ONLY",
+   "action": "RECOMMEND_ONLY",
+   "confidence": "DOCUMENTED",
+   "depends_on": [],
+   "tests": [
+    "daia/docs_intel/test_docs_intel.py::test_catalog_loads_and_validates"
+   ],
+   "history": [
+    {
+     "date": "2026-11-09",
+     "change": "created from the official page; paraphrased"
+    }
+   ],
+   "signals": [
+    "log_index_layout"
+   ]
+  },
+  {
+   "rule_id": "DAIA-DOC-LOG-002",
+   "domain": "logs",
+   "title": "Governanca de cota diaria por indice",
+   "summary": "Cotas diarias limitam quantos logs um indice armazena por dia e ajudam a evitar excedente quando uma nova fonte aparece ou o nivel de log e elevado para debug.",
+   "source": {
+    "type": "official_datadog",
+    "url": "https://docs.datadoghq.com/logs/guide/best-practices-for-log-management/",
+    "section": "Set up multiple indexes for log segmentation",
+    "verified_at": "2026-11-10",
+    "page_sha256": "35451f670870ed1104192a68c065c64c2efc2ecc87a252873328c1f78c9fd213"
+   },
+   "applicability": "REQUIRES_CONFIGURATION_VALIDATION",
+   "conditions": [
+    "indices com cota configuravel",
+    "politica de retencao definida"
+   ],
+   "risks": [
+    "uma cota atingida pode interromper a indexacao e remover evidencias de incidente"
+   ],
+   "permitted_action": "sugerir revisao de cotas",
+   "prohibited_action": "alterar cotas automaticamente",
+   "documented_cost": "unknown",
+   "cost_status": "CUSTO_DESCONHECIDO",
+   "cost_note": "Custo contratual nao validado; a documentacao publica nao substitui o contrato.",
+   "inspection": "READ_ONLY",
+   "action": "RECOMMEND_ONLY",
+   "confidence": "DOCUMENTED",
+   "depends_on": [
+    "DAIA-DOC-LOG-001"
+   ],
+   "tests": [
+    "daia/docs_intel/test_docs_intel.py::test_catalog_loads_and_validates"
+   ],
+   "history": [
+    {
+     "date": "2026-11-09",
+     "change": "created from the official page; paraphrased"
+    }
+   ],
+   "signals": [
+    "daily_quota"
+   ]
+  },
+  {
+   "rule_id": "DAIA-DOC-LOG-003",
+   "domain": "logs",
+   "title": "Alertar a 80 por cento da cota diaria",
+   "summary": "Para indice com cota diaria, a documentacao recomenda monitor que avise quando 80 por cento da cota e atingido nas ultimas 24 horas.",
+   "source": {
+    "type": "official_datadog",
+    "url": "https://docs.datadoghq.com/logs/guide/best-practices-for-log-management/",
+    "section": "Alert on indexes reaching their daily quota",
+    "verified_at": "2026-11-10",
+    "page_sha256": "35451f670870ed1104192a68c065c64c2efc2ecc87a252873328c1f78c9fd213"
+   },
+   "applicability": "REQUIRES_CONFIGURATION_VALIDATION",
+   "conditions": [
+    "indice possui cota diaria",
+    "evento de cota atingida disponivel"
+   ],
+   "risks": [
+    "monitor novo pode gerar ruido e custo de monitoramento"
+   ],
+   "permitted_action": "propor monitor para revisao humana",
+   "prohibited_action": "criar monitor automaticamente",
+   "documented_cost": "unknown",
+   "cost_status": "CUSTO_POTENCIAL",
+   "cost_note": "Monitores nao tem custo adicional publicado aqui, mas queries podem consumir recursos; validar.",
+   "inspection": "READ_ONLY",
+   "action": "RECOMMEND_ONLY",
+   "confidence": "DOCUMENTED",
+   "depends_on": [
+    "DAIA-DOC-LOG-002"
+   ],
+   "tests": [
+    "daia/docs_intel/test_docs_intel.py::test_catalog_loads_and_validates"
+   ],
+   "history": [
+    {
+     "date": "2026-11-09",
+     "change": "created from the official page; paraphrased"
+    }
+   ],
+   "signals": [
+    "daily_quota_event"
+   ]
+  },
+  {
+   "rule_id": "DAIA-DOC-LOG-004",
+   "domain": "logs",
+   "title": "Metricas de uso de logs",
+   "summary": "As metricas datadog.estimated_usage.logs.ingested_bytes e ingested_events existem por padrao, sao descritas como gratuitas e retidas por 15 meses; sao estimativas e podem diferir do faturamento.",
+   "source": {
+    "type": "official_datadog",
+    "url": "https://docs.datadoghq.com/logs/guide/best-practices-for-log-management/",
+    "section": "Log usage metrics",
+    "verified_at": "2026-11-10",
+    "page_sha256": "35451f670870ed1104192a68c065c64c2efc2ecc87a252873328c1f78c9fd213"
+   },
+   "applicability": "REQUIRES_CONFIGURATION_VALIDATION",
+   "conditions": [
+    "metricas presentes na conta"
+   ],
+   "risks": [
+    "tratar estimativa como valor de faturamento"
+   ],
+   "permitted_action": "consultar as metricas em modo leitura",
+   "prohibited_action": "afirmar valor de fatura a partir delas",
+   "documented_cost": "free",
+   "cost_status": "CUSTO_DESCONHECIDO",
+   "cost_note": "Documentadas como gratuitas; confirmar no contrato antes de depender delas.",
+   "inspection": "READ_ONLY",
+   "action": "RECOMMEND_ONLY",
+   "confidence": "DOCUMENTED",
+   "depends_on": [],
+   "tests": [
+    "daia/docs_intel/test_docs_intel.py::test_catalog_loads_and_validates"
+   ],
+   "history": [
+    {
+     "date": "2026-11-09",
+     "change": "created from the official page; paraphrased"
+    }
+   ],
+   "signals": [
+    "datadog.estimated_usage.logs.ingested_bytes",
+    "datadog.estimated_usage.logs.ingested_events"
+   ]
+  },
+  {
+   "rule_id": "DAIA-DOC-LOG-005",
+   "domain": "logs",
+   "title": "Separar logs indexados dos apenas ingeridos",
+   "summary": "Filtrar ingested_events por datadog_is_excluded:false conta somente logs indexados; uma janela acumulada permite acompanhar o volume desde o inicio do mes.",
+   "source": {
+    "type": "official_datadog",
+    "url": "https://docs.datadoghq.com/logs/guide/best-practices-for-log-management/",
+    "section": "Alert on indexed logs volume since the beginning of the month",
+    "verified_at": "2026-11-10",
+    "page_sha256": "35451f670870ed1104192a68c065c64c2efc2ecc87a252873328c1f78c9fd213"
+   },
+   "applicability": "REQUIRES_CONFIGURATION_VALIDATION",
+   "conditions": [
+    "metrica de uso presente",
+    "tag datadog_is_excluded disponivel"
+   ],
+   "risks": [
+    "misturar ingerido e indexado superestima o consumo indexado"
+   ],
+   "permitted_action": "usar o filtro ao analisar consumo indexado",
+   "prohibited_action": "somar ingerido e indexado como se fossem iguais",
+   "documented_cost": "free",
+   "cost_status": "CUSTO_DESCONHECIDO",
+   "cost_note": "Custo contratual nao validado; a documentacao publica nao substitui o contrato.",
+   "inspection": "READ_ONLY",
+   "action": "RECOMMEND_ONLY",
+   "confidence": "DOCUMENTED",
+   "depends_on": [
+    "DAIA-DOC-LOG-004"
+   ],
+   "tests": [
+    "daia/docs_intel/test_docs_intel.py::test_catalog_loads_and_validates"
+   ],
+   "history": [
+    {
+     "date": "2026-11-09",
+     "change": "created from the official page; paraphrased"
+    }
+   ],
+   "signals": [
+    "datadog_is_excluded"
+   ]
+  },
+  {
+   "rule_id": "DAIA-DOC-LOG-006",
+   "domain": "logs",
+   "title": "Deteccao de anomalia no volume por servico e indice",
+   "summary": "A documentacao sugere monitor de anomalia sobre ingested_events agrupado por service e datadog_index para detectar picos ou fontes que pararam.",
+   "source": {
+    "type": "official_datadog",
+    "url": "https://docs.datadoghq.com/logs/guide/best-practices-for-log-management/",
+    "section": "Anomaly detection monitors",
+    "verified_at": "2026-11-10",
+    "page_sha256": "35451f670870ed1104192a68c065c64c2efc2ecc87a252873328c1f78c9fd213"
+   },
+   "applicability": "REQUIRES_CONFIGURATION_VALIDATION",
+   "conditions": [
+    "historico suficiente para sazonalidade",
+    "tags service e datadog_index presentes"
+   ],
+   "risks": [
+    "historico curto gera falso positivo"
+   ],
+   "permitted_action": "detectar localmente o mesmo padrao com baseline e propor monitor",
+   "prohibited_action": "criar monitor de anomalia",
+   "documented_cost": "unknown",
+   "cost_status": "CUSTO_POTENCIAL",
+   "cost_note": "Monitores de anomalia: confirmar no contrato.",
+   "inspection": "READ_ONLY",
+   "action": "RECOMMEND_ONLY",
+   "confidence": "DOCUMENTED",
+   "depends_on": [
+    "DAIA-DOC-LOG-005"
+   ],
+   "tests": [
+    "daia/docs_intel/test_docs_intel.py::test_catalog_loads_and_validates"
+   ],
+   "history": [
+    {
+     "date": "2026-11-09",
+     "change": "created from the official page; paraphrased"
+    }
+   ],
+   "signals": [
+    "ingestion_spike",
+    "ingestion_drop"
+   ]
+  },
+  {
+   "rule_id": "DAIA-DOC-LOG-007",
+   "domain": "logs",
+   "title": "Filtros de exclusao em logs de alto volume",
+   "summary": "Quando o monitor de uso dispara, filtros de exclusao e amostragem reduzem o volume indexado; metricas baseadas em logs preservam tendencias mesmo com exclusao.",
+   "source": {
+    "type": "official_datadog",
+    "url": "https://docs.datadoghq.com/logs/guide/best-practices-for-log-management/",
+    "section": "Set up exclusion filters on high-volume logs",
+    "verified_at": "2026-11-10",
+    "page_sha256": "35451f670870ed1104192a68c065c64c2efc2ecc87a252873328c1f78c9fd213"
+   },
+   "applicability": "REQUIRES_CONFIGURATION_VALIDATION",
+   "conditions": [
+    "padrao repetitivo identificado",
+    "evidencia de incidente e seguranca preservada"
+   ],
+   "risks": [
+    "excluir logs pode apagar evidencia de incidente, seguranca ou auditoria"
+   ],
+   "permitted_action": "recomendar candidatos a exclusao com evidencia",
+   "prohibited_action": "criar ou editar filtros de exclusao",
+   "documented_cost": "unknown",
+   "cost_status": "CUSTO_DESCONHECIDO",
+   "cost_note": "Log-based metrics podem gerar custom metrics; nunca criar automaticamente.",
+   "inspection": "READ_ONLY",
+   "action": "RECOMMEND_ONLY",
+   "confidence": "DOCUMENTED",
+   "depends_on": [],
+   "tests": [
+    "daia/docs_intel/test_docs_intel.py::test_catalog_loads_and_validates"
+   ],
+   "history": [
+    {
+     "date": "2026-11-09",
+     "change": "created from the official page; paraphrased"
+    }
+   ],
+   "signals": [
+    "repetitive_pattern"
+   ]
+  },
+  {
+   "rule_id": "DAIA-DOC-LOG-008",
+   "domain": "logs",
+   "title": "Descobrir indices pouco consultados",
+   "summary": "A documentacao descreve usar o Audit Trail para ranquear indices por consultas e assim avaliar reducao de retencao ou migracao; o Audit Trail e produto cobrado a parte.",
+   "source": {
+    "type": "official_datadog",
+    "url": "https://docs.datadoghq.com/logs/guide/best-practices-for-log-management/",
+    "section": "Monitor which indexes are queried actively",
+    "verified_at": "2026-11-10",
+    "page_sha256": "35451f670870ed1104192a68c065c64c2efc2ecc87a252873328c1f78c9fd213"
+   },
+   "applicability": "REQUIRES_CONFIGURATION_VALIDATION",
+   "conditions": [
+    "Audit Trail contratado"
+   ],
+   "risks": [
+    "ativar produto cobrado cria custo incremental"
+   ],
+   "permitted_action": "usar somente se ja estiver habilitado e autorizado",
+   "prohibited_action": "ativar o Audit Trail",
+   "documented_cost": "billable",
+   "cost_status": "RECURSO_PAGO",
+   "cost_note": "Produto cobrado a parte segundo a documentacao.",
+   "inspection": "READ_ONLY",
+   "action": "RECOMMEND_ONLY",
+   "confidence": "DOCUMENTED",
+   "depends_on": [],
+   "tests": [
+    "daia/docs_intel/test_docs_intel.py::test_catalog_loads_and_validates"
+   ],
+   "history": [
+    {
+     "date": "2026-11-09",
+     "change": "created from the official page; paraphrased"
+    }
+   ],
+   "signals": [
+    "index_query_activity"
+   ]
+  },
+  {
+   "rule_id": "DAIA-DOC-LOG-009",
+   "domain": "logs",
+   "title": "Sensitive Data Scanner",
+   "summary": "O scanner identifica, marca e opcionalmente mascara dados sensiveis em logs; a documentacao informa que e produto cobrado a parte.",
+   "source": {
+    "type": "official_datadog",
+    "url": "https://docs.datadoghq.com/logs/guide/best-practices-for-log-management/",
+    "section": "Enable Sensitive Data Scanner",
+    "verified_at": "2026-11-10",
+    "page_sha256": "35451f670870ed1104192a68c065c64c2efc2ecc87a252873328c1f78c9fd213"
+   },
+   "applicability": "REQUIRES_CONFIGURATION_VALIDATION",
+   "conditions": [
+    "produto contratado"
+   ],
+   "risks": [
+    "ativar produto cobrado cria custo incremental"
+   ],
+   "permitted_action": "mascarar localmente antes de qualquer processamento por IA",
+   "prohibited_action": "ativar o scanner",
+   "documented_cost": "billable",
+   "cost_status": "RECURSO_PAGO",
+   "cost_note": "Produto cobrado a parte segundo a documentacao.",
+   "inspection": "READ_ONLY",
+   "action": "RECOMMEND_ONLY",
+   "confidence": "DOCUMENTED",
+   "depends_on": [],
+   "tests": [
+    "daia/docs_intel/test_docs_intel.py::test_catalog_loads_and_validates"
+   ],
+   "history": [
+    {
+     "date": "2026-11-09",
+     "change": "created from the official page; paraphrased"
+    }
+   ],
+   "signals": [
+    "pii_in_logs"
+   ]
+  },
+  {
+   "rule_id": "DAIA-DOC-LOG-010",
+   "domain": "logs",
+   "title": "RBAC para proteger retencao e parsing",
+   "summary": "Funcoes customizadas podem impedir que usuarios alterem retencao de indices e configuracoes de parsing, evitando picos de custo e mudancas indesejadas.",
+   "source": {
+    "type": "official_datadog",
+    "url": "https://docs.datadoghq.com/logs/guide/best-practices-for-log-management/",
+    "section": "Set up RBAC for custom roles",
+    "verified_at": "2026-11-10",
+    "page_sha256": "35451f670870ed1104192a68c065c64c2efc2ecc87a252873328c1f78c9fd213"
+   },
+   "applicability": "REQUIRES_CONFIGURATION_VALIDATION",
+   "conditions": [
+    "funcoes customizadas habilitadas"
+   ],
+   "risks": [
+    "alterar papeis pode bloquear equipes de operacao"
+   ],
+   "permitted_action": "verificar quem pode alterar retencao e sugerir revisao",
+   "prohibited_action": "alterar papeis ou permissoes",
+   "documented_cost": "unknown",
+   "cost_status": "CUSTO_DESCONHECIDO",
+   "cost_note": "Custo contratual nao validado; a documentacao publica nao substitui o contrato.",
+   "inspection": "READ_ONLY",
+   "action": "RECOMMEND_ONLY",
+   "confidence": "DOCUMENTED",
+   "depends_on": [],
+   "tests": [
+    "daia/docs_intel/test_docs_intel.py::test_catalog_loads_and_validates"
+   ],
+   "history": [
+    {
+     "date": "2026-11-09",
+     "change": "created from the official page; paraphrased"
+    }
+   ],
+   "signals": [
+    "rbac_log_config"
+   ]
+  },
+  {
+   "rule_id": "DAIA-DOC-LOG-011",
+   "domain": "logs",
+   "title": "Limite de varredura em arquivos",
+   "summary": "Em arquivos de logs, o tamanho maximo de varredura por consulta ou reidratacao limita volume e custo.",
+   "source": {
+    "type": "official_datadog",
+    "url": "https://docs.datadoghq.com/logs/guide/best-practices-for-log-management/",
+    "section": "Set up max scan size to manage costs",
+    "verified_at": "2026-11-10",
+    "page_sha256": "35451f670870ed1104192a68c065c64c2efc2ecc87a252873328c1f78c9fd213"
+   },
+   "applicability": "REQUIRES_CONFIGURATION_VALIDATION",
+   "conditions": [
+    "arquivos configurados"
+   ],
+   "risks": [
+    "limite baixo pode impedir investigacao"
+   ],
+   "permitted_action": "revisar se o limite existe",
+   "prohibited_action": "alterar arquivos ou limites",
+   "documented_cost": "unknown",
+   "cost_status": "CUSTO_DESCONHECIDO",
+   "cost_note": "Custo contratual nao validado; a documentacao publica nao substitui o contrato.",
+   "inspection": "READ_ONLY",
+   "action": "RECOMMEND_ONLY",
+   "confidence": "DOCUMENTED",
+   "depends_on": [],
+   "tests": [
+    "daia/docs_intel/test_docs_intel.py::test_catalog_loads_and_validates"
+   ],
+   "history": [
+    {
+     "date": "2026-11-09",
+     "change": "created from the official page; paraphrased"
+    }
+   ],
+   "signals": [
+    "archive_max_scan"
+   ]
+  },
+  {
+   "rule_id": "DAIA-DOC-LOG-012",
+   "domain": "logs",
+   "title": "Flex Logs para retencao longa",
+   "summary": "Flex Logs separa armazenamento de computacao para reter mais logs por mais tempo; indicado para dados consultados com pouca frequencia.",
+   "source": {
+    "type": "official_datadog",
+    "url": "https://docs.datadoghq.com/logs/guide/best-practices-for-log-management/",
+    "section": "Set up storage for long-term retention",
+    "verified_at": "2026-11-10",
+    "page_sha256": "35451f670870ed1104192a68c065c64c2efc2ecc87a252873328c1f78c9fd213"
+   },
+   "applicability": "REQUIRES_CONFIGURATION_VALIDATION",
+   "conditions": [
+    "necessidade real de retencao longa"
+   ],
+   "risks": [
+    "migrar camada altera custo e velocidade de consulta"
+   ],
+   "permitted_action": "avaliar candidatos apenas como opcao",
+   "prohibited_action": "migrar logs para Flex Logs",
+   "documented_cost": "unknown",
+   "cost_status": "CUSTO_DESCONHECIDO",
+   "cost_note": "Custo contratual nao validado; a documentacao publica nao substitui o contrato.",
+   "inspection": "READ_ONLY",
+   "action": "RECOMMEND_ONLY",
+   "confidence": "DOCUMENTED",
+   "depends_on": [],
+   "tests": [
+    "daia/docs_intel/test_docs_intel.py::test_catalog_loads_and_validates"
+   ],
+   "history": [
+    {
+     "date": "2026-11-09",
+     "change": "created from the official page; paraphrased"
+    }
+   ],
+   "signals": [
+    "flex_logs"
+   ]
+  },
+  {
+   "rule_id": "DAIA-DOC-API-001",
+   "domain": "api",
+   "title": "Respeitar HTTP 429 e cabecalhos de limite",
+   "summary": "Ao exceder o limite o Datadog responde 429; deve-se aguardar X-RateLimit-Period ou chamar com frequencia pouco maior que a indicada em X-RateLimit-Limit e X-RateLimit-Period.",
+   "source": {
+    "type": "official_datadog",
+    "url": "https://docs.datadoghq.com/api/latest/rate-limits/",
+    "section": "Rate Limits",
+    "verified_at": "2026-11-10",
+    "page_sha256": "d76a7a2ec60d89fb2b76537eca2421b1f9e1febf23b1d5ea4db139c8590a3acf"
+   },
+   "applicability": "REQUIRES_CONFIGURATION_VALIDATION",
+   "conditions": [
+    "resposta 429 ou cabecalhos presentes"
+   ],
+   "risks": [
+    "insistir agrava o bloqueio"
+   ],
+   "permitted_action": "aplicar backoff e parar a coleta quando necessario",
+   "prohibited_action": "contornar o bloqueio ou pedir aumento automatico",
+   "documented_cost": "unknown",
+   "cost_status": "CUSTO_DESCONHECIDO",
+   "cost_note": "Aumentar limites exige Support; nunca automatizar.",
+   "inspection": "READ_ONLY",
+   "action": "RECOMMEND_ONLY",
+   "confidence": "DOCUMENTED",
+   "depends_on": [],
+   "tests": [
+    "daia/docs_intel/test_docs_intel.py::test_catalog_loads_and_validates"
+   ],
+   "history": [
+    {
+     "date": "2026-11-09",
+     "change": "created from the official page; paraphrased"
+    }
+   ],
+   "signals": [
+    "X-RateLimit-Limit",
+    "X-RateLimit-Period",
+    "X-RateLimit-Remaining",
+    "X-RateLimit-Reset"
+   ]
+  },
+  {
+   "rule_id": "DAIA-DOC-API-002",
+   "domain": "api",
+   "title": "Metricas de visibilidade de rate limit",
+   "summary": "Metricas datadog.apis.rate_limit.usage.* mostram requisicoes permitidas, bloqueadas e percentual de uso por escopo de organizacao, usuario e chave de API.",
+   "source": {
+    "type": "official_datadog",
+    "url": "https://docs.datadoghq.com/api/latest/rate-limits/",
+    "section": "Datadog API usage metrics",
+    "verified_at": "2026-11-10",
+    "page_sha256": "d76a7a2ec60d89fb2b76537eca2421b1f9e1febf23b1d5ea4db139c8590a3acf"
+   },
+   "applicability": "REQUIRES_CONFIGURATION_VALIDATION",
+   "conditions": [
+    "metricas presentes na conta"
+   ],
+   "risks": [
+    "leitura excessiva dessas metricas consome o proprio limite"
+   ],
+   "permitted_action": "consultar com cache e janela curta",
+   "prohibited_action": "usar para escalar limites automaticamente",
+   "documented_cost": "unknown",
+   "cost_status": "CUSTO_DESCONHECIDO",
+   "cost_note": "Custo contratual nao validado; a documentacao publica nao substitui o contrato.",
+   "inspection": "READ_ONLY",
+   "action": "RECOMMEND_ONLY",
+   "confidence": "DOCUMENTED",
+   "depends_on": [
+    "DAIA-DOC-API-001"
+   ],
+   "tests": [
+    "daia/docs_intel/test_docs_intel.py::test_catalog_loads_and_validates"
+   ],
+   "history": [
+    {
+     "date": "2026-11-09",
+     "change": "created from the official page; paraphrased"
+    }
+   ],
+   "signals": [
+    "datadog.apis.rate_limit.usage.per_org_pct",
+    "datadog.apis.rate_limit.usage.per_api_key_blocked_count"
+   ]
+  },
+  {
+   "rule_id": "DAIA-DOC-API-003",
+   "domain": "api",
+   "title": "Metricas legadas datadog.apis.usage.* substituidas",
+   "summary": "As metricas datadog.apis.usage.* foram substituidas pelo namespace rate_limit.usage; consultas antigas devem migrar.",
+   "source": {
+    "type": "official_datadog",
+    "url": "https://docs.datadoghq.com/api/latest/rate-limits/",
+    "section": "Migrate from legacy usage metrics",
+    "verified_at": "2026-11-10",
+    "page_sha256": "d76a7a2ec60d89fb2b76537eca2421b1f9e1febf23b1d5ea4db139c8590a3acf"
+   },
+   "applicability": "REQUIRES_CONFIGURATION_VALIDATION",
+   "conditions": [
+    "dashboards ou monitores usam o namespace legado"
+   ],
+   "risks": [
+    "monitor legado pode ficar sem dados"
+   ],
+   "permitted_action": "sinalizar uso do namespace legado",
+   "prohibited_action": "editar monitores ou dashboards",
+   "documented_cost": "unknown",
+   "cost_status": "CUSTO_DESCONHECIDO",
+   "cost_note": "Custo contratual nao validado; a documentacao publica nao substitui o contrato.",
+   "inspection": "READ_ONLY",
+   "action": "RECOMMEND_ONLY",
+   "confidence": "DOCUMENTED",
+   "depends_on": [
+    "DAIA-DOC-API-002"
+   ],
+   "tests": [
+    "daia/docs_intel/test_docs_intel.py::test_catalog_loads_and_validates"
+   ],
+   "history": [
+    {
+     "date": "2026-11-09",
+     "change": "created from the official page; paraphrased"
+    }
+   ],
+   "signals": [
+    "datadog.apis.usage."
+   ]
+  }
+ ]
+}

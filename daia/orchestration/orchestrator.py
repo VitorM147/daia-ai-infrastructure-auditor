@@ -20,7 +20,7 @@ import uuid
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from dataclasses import asdict, dataclass, field
 from datetime import datetime, timedelta
-from typing import Any, Callable, Mapping
+from typing import Any, Callable, Mapping, Sequence
 
 from daia.jira.client import JiraClientError, JiraTimeoutError
 from daia.jira.controller import JiraController
@@ -100,7 +100,10 @@ class AuditOrchestrator:
     def __init__(self, port: ToolPort, store: AuditStore, *, policy: LimitPolicy | None = None,
                  registry: FindingRegistry | None = None, now: Callable[[], datetime] = utc_now,
                  monotonic: Callable[[], float] = time.monotonic, sleep: Callable[[float], None] = time.sleep,
-                 checkpoint_every: int = 10):
+                 checkpoint_every: int = 10, enrichers: Sequence[Callable[[dict[str, Any], dict[str, Any]], Mapping[str, Any]]] = ()):
+        # enrichers: optional read-only analysers (V5.1). Each gets (checkpoint, collected data) and returns a
+        # JSON-serialisable mapping stored under cp["enrichment"]. Empty by default: behaviour is unchanged.
+        self.enrichers = tuple(enrichers)
         self.port, self.store = port, store
         self.policy = policy or LimitPolicy.load()
         self.registry = registry or FindingRegistry()
@@ -470,6 +473,16 @@ class AuditOrchestrator:
     def _stage_preventive_analysis(self) -> None:
         self.cp["future_risks"] = [{"resource": f["resource"], "problem_class": f["problem_class"], "summary": f["summary"]}
                                    for f in self.cp["findings"] if f["state"] == "RISCO_FUTURO"]
+        enrichment: dict[str, Any] = {}
+        for fn in self.enrichers:
+            name = getattr(fn, "__name__", type(fn).__name__)
+            try:
+                enrichment[name] = dict(fn(self.cp, self.data()))
+            except Exception as exc:     # an analyser failure is a recorded limitation, never a crash or a silent pass
+                enrichment[name] = {"status": "FALHOU", "error": f"{type(exc).__name__}: {str(exc)[:200]}"}
+                self.cp["limitations"].append(f"Enriquecedor {name} falhou: {type(exc).__name__}; resultado omitido.")
+        if enrichment:
+            self.cp["enrichment"] = enrichment
 
     def _stage_prioritization(self) -> None:
         self.cp["findings"] = prioritize(self.cp["findings"])

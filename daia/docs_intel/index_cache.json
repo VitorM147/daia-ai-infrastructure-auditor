@@ -1,0 +1,85 @@
+{
+ "verified_at": "2026-11-10",
+ "entries": {
+  "Log Management": {
+   "url": "https://docs.datadoghq.com/log_management/llms.txt",
+   "exists": true,
+   "status": 200
+  },
+  "API Reference": {
+   "url": "https://docs.datadoghq.com/api/llms.txt",
+   "exists": true,
+   "status": 200
+  },
+  "APM": {
+   "url": "https://docs.datadoghq.com/apm/llms.txt",
+   "exists": true,
+   "status": 200
+  },
+  "Infrastructure": {
+   "url": "https://docs.datadoghq.com/infrastructure/llms.txt",
+   "exists": true,
+   "status": 200
+  },
+  "Containers": {
+   "url": "https://docs.datadoghq.com/containers/llms.txt",
+   "exists": true,
+   "status": 200
+  },
+  "Dashboards": {
+   "url": "https://docs.datadoghq.com/dashboards/llms.txt",
+   "exists": true,
+   "status": 200
+  },
+  "Monitors": {
+   "url": "https://docs.datadoghq.com/monitors/llms.txt",
+   "exists": true,
+   "status": 200
+  },
+  "Database Monitoring": {
+   "url": "https://docs.datadoghq.com/database_monitoring/llms.txt",
+   "exists": true,
+   "status": 200
+  },
+  "Datadog MCP Server": {
+   "url": "https://docs.datadoghq.com/datadog_mcp_server/llms.txt",
+   "exists": true,
+   "status": 200
+  },
+  "Cloud Cost Management": {
+   "url": "https://docs.datadoghq.com/cloud_cost_management/llms.txt",
+   "exists": true,
+   "status": 200
+  },
+  "Integrations": {
+   "url": "https://docs.datadoghq.com/integrations/llms.txt",
+   "exists": true,
+   "status": 200
+  },
+  "Datadog Watchdog": {
+   "url": "https://docs.datadoghq.com/datadog_watchdog/llms.txt",
+   "exists": true,
+   "status": 200
+  },
+  "Service Level Objectives": {
+   "url": "https://docs.datadoghq.com/service_level_objectives/llms.txt",
+   "exists": true,
+   "status": 200
+  },
+  "Event Management": {
+   "url": "https://docs.datadoghq.com/event_management/llms.txt",
+   "exists": true,
+   "status": 200
+  },
+  "(brief) /logs/llms.txt": {
+   "url": "https://docs.datadoghq.com/logs/llms.txt",
+   "exists": false,
+   "status": 404
+  },
+  "(brief) /service_management/llms.txt": {
+   "url": "https://docs.datadoghq.com/service_management/llms.txt",
+   "exists": false,
+   "status": 404
+  }
+ }
+}
